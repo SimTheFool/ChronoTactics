@@ -1,16 +1,42 @@
-public class Actor
-{
-    public string name;
-    public int speed;
+using UnityEngine;
 
-    public Actor(string name, int speed = 50)
+public class Actor: MonoBehaviour
+{
+    [SerializeField]
+    private string actorName;
+
+    public string getActorName()
     {
-        this.name = name;
+        return this.actorName;
+    }
+
+    public void setActorName(string actorName)
+    {
+        this.actorName = actorName;
+    }
+
+    [SerializeField]
+    private int speed;
+
+    public int getSpeed()
+    {
+        return this.speed;
+    }
+
+    public void setSpeed(int speed)
+    {
         this.speed = speed;
     }
 
+
+    public void Awake()
+    {
+        DependencyLocator.getTimelineHandler().registerActor(this);
+    }
+
+
     public override string ToString()
     {
-        return this.name;
+        return this.actorName;
     }
 }

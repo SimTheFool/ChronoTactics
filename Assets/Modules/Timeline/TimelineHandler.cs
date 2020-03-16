@@ -5,56 +5,38 @@ using UnityEngine;
 public class TimelineHandler : MonoBehaviour
 {
 
-    private List<Actor> gameActors;
+    private List<Actor> gameActors = new List<Actor>();
 
     private int timelineMaxLength = 6;
     private int turnCount = 0;
-    private List<TimelineActor> timelineActors;
-    public Dictionary<int, Turn> timeline;
-
+    public Dictionary<int, Turn> timeline = new Dictionary<int, Turn>();
 
     void Start()
     {
-        this.fetchGameActors();
         this.InitializeTimeline();
-
-        foreach(KeyValuePair<int, Turn> pair in this.timeline)
-        {
-            Debug.Log(pair.Key);
-            Debug.Log(pair.Value);
-        }
-    }
-
-    void Update()
-    {
-
     }
 
     private void InitializeTimeline()
     {
-        this.timeline = new Dictionary<int, Turn>();
+        List<TimelineActor> actors = new List<TimelineActor>();
+        foreach(Actor actor in this.gameActors)
+        {
+            actors.Add(new TimelineActor(actor));
+        }
+
         while(this.Count() <= this.timelineMaxLength)
         {
             this.turnCount ++;
-
             Turn turn = new Turn();
-            this.timelineActors = turn.UpdateAllActors(this.timelineActors);
+
+            actors = turn.UpdateAllActors(actors);
             this.timeline.Add(this.turnCount, turn);
         }
     }
 
-    private void fetchGameActors()
+    public void registerActor(Actor actor)
     {
-        this.gameActors = new List<Actor>();
-        this.gameActors.Add(new Actor("Roger", 50));  
-        this.gameActors.Add(new Actor("Paulette", 100));
-        this.gameActors.Add(new Actor("Bernard", 150));
-
-        this.timelineActors = new List<TimelineActor>();
-        foreach(Actor actor in gameActors)
-        {
-            this.timelineActors.Add(new TimelineActor(actor));
-        }
+        this.gameActors.Add(actor);
     }
 
     public int Count()

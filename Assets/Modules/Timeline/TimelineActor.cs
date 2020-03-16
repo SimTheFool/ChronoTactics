@@ -24,7 +24,7 @@ public struct TimelineActor
 
     public int getSpeed()
     {
-        return this.gameActor.speed;
+        return this.gameActor.getSpeed();
     }
 
     public override string ToString()
