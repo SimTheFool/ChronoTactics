@@ -5,43 +5,56 @@ using UnityEngine;
 public class Turn
 {
     private List<TimelineActor> inputActors;
-    private List<KeyValuePair<Actor, float>> priorities;
+    private List<KeyValuePair<int, float>> priorities;
 
+    // Record all timeline actors state for this turn, process their priority for this turn, and output new timeline actors state
     public List<TimelineActor> UpdateAllActors(List<TimelineActor> actors)
     {
         this.inputActors = new List<TimelineActor>(actors);
-        this.priorities = new List<KeyValuePair<Actor, float>>();
+        this.priorities = new List<KeyValuePair<int, float>>();
 
-        List<TimelineActor> tempActors = new List<TimelineActor>(this.inputActors);
+        List<TimelineActor> outputActors = new List<TimelineActor>();
 
-        for(int i = 0; i < tempActors.Count; i++)
+        for(int i = 0; i < inputActors.Count; i++)
         {
-            tempActors[i] = this.EvaluatePriorities(tempActors[i]);
+            outputActors.Add(this.EvaluateActorPriorities(i));
         }
 
         this.SortPriorities();
-        return tempActors;
+        return outputActors;
     }
 
-    private TimelineActor EvaluatePriorities(TimelineActor actor)
+    // From an index, get a timeline actor state from the inputActors, evaluate its priorities, and return a new timeline actor state
+    private TimelineActor EvaluateActorPriorities(int actorIndex)
     {
-        int finalAtb = actor.atb + actor.gameActor.speed;
+        TimelineActor actor = this.inputActors[actorIndex];
+        int finalAtb = actor.getAtb() + actor.getSpeed();
         int canPlayNb = finalAtb / 100;
 
         for(int i = 1; i <= canPlayNb; i++)
         {
-            float priority = ((i * 100) - actor.atb) / (float)actor.gameActor.speed;
-            this.priorities.Add(new KeyValuePair<Actor, float>(actor.gameActor, priority));
+            float priority = ((i * 100) - actor.getAtb()) / (float)actor.getSpeed();
+            this.priorities.Add(new KeyValuePair<int, float>(actorIndex, priority));
         }
         
-        actor.atb = finalAtb % 100;
+        actor.setAtb(finalAtb % 100);
         return actor;
     }
 
     private void SortPriorities()
     {
         this.priorities.Sort((x, y) => {
-            return x.Value.CompareTo(y.Value);
+            int comparison = x.Value.CompareTo(y.Value);
+            
+            if(comparison == 0)
+            {
+                int speedX = this.inputActors[x.Key].getSpeed();
+                int speedY = this.inputActors[y.Key].getSpeed();
+
+                return speedX.CompareTo(speedY) * -1;
+            }
+
+            return comparison;
         });
     }
 
@@ -52,26 +65,21 @@ public class Turn
 
     public override string ToString()
     {
-        string msg = "";
-        
-        msg += "Actors ::";
+        string msg = "Turn infos";
+
+        msg += "\n Actors ::";
         foreach(TimelineActor actor in this.inputActors)
         {
-            msg += " " + actor.ToString();
+            msg += $" {actor.ToString()} [atb: {actor.getAtb()}]";
         }
 
-        msg += "\n";
-
-        msg += "Priorities ::";
-        foreach(KeyValuePair<Actor, float> pair in this.priorities)
+        msg += "\n \n Priorities ::";
+        foreach(KeyValuePair<int, float> pair in this.priorities)
         {
-            msg += " " + pair.Key.ToString() + " " + pair.Value.ToString() + "~~";
+            TimelineActor actor = this.inputActors[pair.Key];
+            msg += $"\n {actor} [priority: {pair.Value.ToString()}, speed: {actor.getSpeed()}]";
         }
 
         return msg;
     }
-
-    // @TODO data struct to encapsulate actor index with priority.
-
-    // 
 }

@@ -7,7 +7,7 @@ public class TimelineHandler : MonoBehaviour
 
     private List<Actor> gameActors;
 
-    private int timelineMaxLength = 20;
+    private int timelineMaxLength = 6;
     private int turnCount = 0;
     private List<TimelineActor> timelineActors;
     public Dictionary<int, Turn> timeline;
