@@ -9,8 +9,10 @@ public class DependencyLocator : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Destroy(this.gameObject);
-        } else {
+            Destroy(this);
+        }
+        else
+        {
             instance = this;
         }
     }
