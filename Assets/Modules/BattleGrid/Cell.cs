@@ -5,41 +5,52 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class Cell : MonoBehaviour
 {
-    static private Dictionary<Vector2, Cell> grid = new Dictionary<Vector2, Cell>();
+    private static Dictionary<Vector2Int, Cell> grid;
+
+    public enum TopologyType { Walkable, Viewable };
+    private static Dictionary<TopologyType, AbstractTopology> topologies;
 
     private CellPrototype prototype;
-    public CellPrototype getPrototype()
+    private CellPrototype getPrototype()
     {
         return this.prototype;
     }
-    public void setPrototype(CellPrototype prototype)
+    private void setPrototype(CellPrototype prototype)
     {
         this.prototype = prototype;
+        this.GetComponent<SpriteRenderer>().sprite = prototype.sprite;
     }
 
-    private Vector2 coord;
-    public Vector2 getCoord()
+    private Vector2Int coord;
+    private void setCoord(Vector2Int coord)
+    {
+        this.coord = coord;
+    }
+    public Vector2Int getCoord()
     {
         return this.coord;
     }
 
-    public void Initialize(CellPrototype prototype, Vector2 coord)
+    public void Initialize(CellPrototype prototype, Vector2Int coord)
     {
-        this.prototype = prototype;
-        this.coord = coord;
+        this.setPrototype(prototype);
+        this.setCoord(coord);
 
+        if(Cell.grid == null)
+        {
+            Cell.grid = new Dictionary<Vector2Int, Cell>();
+        }
         Cell.grid.Add(coord, this);
-        this.GetComponent<SpriteRenderer>().sprite = this.prototype.sprite;
+
+        if(Cell.topologies == null)
+        {
+            Cell.topologies = new Dictionary<TopologyType, AbstractTopology>();
+            //Cell.finderMap.Add(FinderType.Walkable, )
+        }
     }
 
-    public bool IsWalkable()
+    public List<Cell> findPathTo(Cell dest, TopologyType type)
     {
-        return this.prototype.isWalkable;
-    }
-
-    public List<Cell> findWalkablePathTo(Cell dest)
-    {
-        //@TODO
-        return new List<Cell>();
+        return Cell.topologies[type].findPath(this, dest);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleGrid : MonoBehaviour
+public class BattleMapGenerator : MonoBehaviour
 {
     private Dictionary<string, CellPrototype> cellPrototypes;
     public GameObject cellPrefab;
@@ -12,11 +12,6 @@ public class BattleGrid : MonoBehaviour
         this.cellPrototypes = ResourcesLoader.getCellPrototypes();
         this.GenerateGrid(15, 15);
     }
-
-    /* private void GenerateGrid(GameObject grid)
-    {
-
-    } */
 
     private void GenerateGrid(int width, int height)
     {
@@ -30,7 +25,7 @@ public class BattleGrid : MonoBehaviour
 
                 Cell cell = go.GetComponent<Cell>();
                 CellPrototype prototype = (Random.Range(0, 14) == 0) ? this.cellPrototypes["wall"] : this.cellPrototypes["floor"];
-                cell.Initialize(prototype, new Vector2(x, y));                
+                cell.Initialize(prototype, new Vector2Int(x, y));                
             }
         }
     }

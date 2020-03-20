@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     {
         if(!this.foundPath)
         {
-            this.foundPath = true;
+            /* this.foundPath = true;
 
             Cell[] cells = Resources.FindObjectsOfTypeAll<Cell>();
 
@@ -44,14 +44,14 @@ public class Test : MonoBehaviour
             }
 
             startCell.GetComponent<SpriteRenderer>().color = new Color(250, 0, 0, 1);
-            endCell.GetComponent<SpriteRenderer>().color = new Color(250, 0, 0, 1);
+            endCell.GetComponent<SpriteRenderer>().color = new Color(250, 0, 0, 1); */
 
-            List<Cell> path = startCell.findWalkablePathTo(endCell);
+            /* List<Cell> path = startCell.findPath(endCell);
 
             foreach(Cell cell in path)
             {
                 cell.GetComponent<SpriteRenderer>().color = new Color(0, 0, 250, 1);
-            }
+            } */
         }
     }
 }
