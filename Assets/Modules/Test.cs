@@ -9,49 +9,50 @@ public class Test : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     void Update()
     {
         if(!this.foundPath)
         {
-            /* this.foundPath = true;
+            this.foundPath = true;
 
             Cell[] cells = Resources.FindObjectsOfTypeAll<Cell>();
 
             Cell startCell = null;
             Cell endCell = null;
 
-            for(int i = 0; i < cells.Length; i++)
+            for(int i = 17; i < cells.Length; i++)
             {
-                if(cells[i].IsWalkable())
+                if(cells[i].IsWalkable(Cell.TopologyType.Manhattan))
                 {
                     startCell = cells[i];
                     break;
                 }
             }
 
-            for(int i = cells.Length - 3; i >= 0; i--)
+            for(int i = cells.Length - 17; i >= 0; i--)
             {
-                Debug.Log(cells[i]);
-
-                if(cells[i].IsWalkable())
+                if(cells[i].IsWalkable(Cell.TopologyType.Manhattan))
                 {
                     endCell = cells[i];
                     break;
                 }
             }
 
-            startCell.GetComponent<SpriteRenderer>().color = new Color(250, 0, 0, 1);
-            endCell.GetComponent<SpriteRenderer>().color = new Color(250, 0, 0, 1); */
+            List<Cell> path = startCell.findPathTo(endCell, Cell.TopologyType.Manhattan);
 
-            /* List<Cell> path = startCell.findPath(endCell);
-
-            foreach(Cell cell in path)
+            if(path != null)
             {
-                cell.GetComponent<SpriteRenderer>().color = new Color(0, 0, 250, 1);
-            } */
+                foreach(Cell cell in path)
+                {
+                    cell.changeColor(Color.magenta);
+                }
+            }
+
+            startCell.changeColor(Color.red);
+            endCell.changeColor(Color.red);
         }
     }
 }

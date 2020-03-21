@@ -6,25 +6,32 @@ public abstract class AbstractTopology
 {
     private Dictionary<Vector2Int, Cell> grid;
 
-    private struct Node
+    // Links each cell with their cost for pathfinding algorithm.
+    private class Node
     {
         public Cell cell;
+        public Node previous;
         public int f;
         public int h;
 
-        public Node(Cell cell)
+        public Node(Cell cell, Node previous = null, int f = 0, int h = 0)
         {
             this.cell = cell;
-            this.f = 0;
-            this.h = 0;
+            this.previous = previous;
+            this.f = f;
+            this.h = h;
         }
     }
 
+    // Comparer used by the SortedList in pathfinding algorithm.
     private class ByHCost : IComparer<Node>
     {
         public int Compare(Node origin, Node dest)
         {
-            return origin.h.CompareTo(dest.h);
+            int result = origin.h.CompareTo(dest.h);
+            result = (result == 0) ? -1 : result;
+            result = (origin.cell == dest.cell) ? 0 : result;
+            return result;
         }
     }
 
@@ -33,54 +40,88 @@ public abstract class AbstractTopology
         this.grid = grid;
     }
 
+    // A-star pathfinding algorithm.
     public List<Cell> findPath(Cell origin, Cell dest)
     {
+        // Node which must be evaluated.
         SortedSet<Node> openSet = new SortedSet<Node>(new ByHCost());
-        List<Cell> closedSet = new List<Cell>();
 
-        openSet.Add(new Node(origin));
+        // Node already evaluated.
+        List<Node> closedSet = new List<Node>();
 
+        // The origin cell is the first node which will be evaluated.
+        openSet.Add(new Node(origin, null, 0, this.GetDistanceBetween(origin, dest)));
+
+        // We proceed while there are still cells to be evaluated.
         while(openSet.Count > 0)
         {
+            // We extract the best candidate of the openSet.
             Node currentNode = openSet.Min;
             openSet.Remove(currentNode);
 
+            // If this candidate is the destination cell, we have found a path and we can end the algorithm.
             if(this.AreSameCell(currentNode.cell, dest))
             {
-                // reconstituer chemin
+                // Rebuilding the final path and returning the list of cells.
+                List<Cell> finalSet = new List<Cell>();
+                Node tempNode =  closedSet[closedSet.Count - 1];
+
+                while(tempNode != null)
+                {
+                   finalSet.Add(tempNode.cell);
+                   tempNode = tempNode.previous;
+                }
+
+                return finalSet;
             }
 
-            List<Cell> accessibleCells = this.GetCellsInRange(currentNode.cell, 1, 1);
-
-            foreach(Cell cell in accessibleCells)
+            // We get all the cells in range of the candidate, and we determine if they are accessible.
+            List<Cell> cellsInRange = this.GetCellsInRange(currentNode.cell, 1, 1);
+            foreach(Cell cellInRange in cellsInRange)
             {
-                if(!this.isWalkable(cell))
+                // If this cell is not acessible, we don't add it to candidate list.
+                if(!this.IsWalkable(cellInRange))
                 {
                     continue;
                 }
 
-                if(closedSet.Contains(cell))
+                // If this cell has already been evaluated, we don't add it to candidate list.
+                if(closedSet.Exists(node => {
+                    return node.cell == cellInRange;
+                }))
                 {
                     continue;
                 }
 
-                foreach(Node node in openSet)
+                // We create a new node with that cell.
+                int f = currentNode.f + 1;
+                int h = f + this.GetDistanceBetween(cellInRange, dest);
+                Node candidateNode = new Node(cellInRange, currentNode, f, h);
+
+                // We check if the node is already in the candidate list.
+                if(!openSet.Contains(candidateNode))
                 {
-                    // on check si la cellule est dans le set
-                    // On compare leur cout f
-                    // si le f de sorted set est inférieur on passe
-                    // sinon on supprime l'élément du set
+                    // If it doesn't exist, we add that node to the candidate list.
+                    openSet.Add(candidateNode);
                 }
+                else
+                {
+                    // If it exists, we try to remove it if it has a worse f cost. In that case, we had the new version of the node.
+                    int removedNode = openSet.RemoveWhere((Node x) => {
+                        return (x.f > candidateNode.f);
+                    });
 
-
+                    if(removedNode > 0)
+                    {
+                        openSet.Add(candidateNode);
+                    }
+                }
             }
 
-            //trouver le noeud le plus proche dans la liste ouverte
-            //si ce ne est la destination, fini
-            //sinon
+            closedSet.Add(currentNode);
         }
 
-        return new List<Cell>();
+        return null;
     }
 
     public List<Cell> GetCellsInRange(Cell origin, int min, int max)
@@ -91,29 +132,19 @@ public abstract class AbstractTopology
 
         for(int distance = min; distance <= max; distance++)
         {
-            // To reverse distance, we have to assume we are in [0, inf]/[0, inf] to the destination in [0, inf]/[0, inf] at a specific distance.
-            Vector2Int dest = this.ReverseDistance(new Vector2Int(Mathf.Abs(originX), Mathf.Abs(originY)), distance);
+            // To reverse distance, we have to assume we are in [0, inf]/[0, inf].
+            List<Vector2Int> destinations = this.ReverseDistance(new Vector2Int(Mathf.Abs(originX), Mathf.Abs(originY)), distance);
 
-            // Because distance is symetric with x and y, we can deduce four dest which correspond to that specific distance.
-            Cell cell;
-            if(this.grid.TryGetValue(new Vector2Int(dest.x, dest.y), out cell))
+            foreach(Vector2Int dest in destinations)
             {
-                cells.Add(cell);
-            }
-
-            if(this.grid.TryGetValue(new Vector2Int(dest.x * -1, dest.y), out cell))
-            {
-                cells.Add(cell);
-            }
-
-            if(this.grid.TryGetValue(new Vector2Int(dest.x, dest.y * -1), out cell))
-            {
-                cells.Add(cell);
-            }
-
-            if(this.grid.TryGetValue(new Vector2Int(dest.x * -1, dest.y * -1), out cell))
-            {
-                cells.Add(cell);
+                Cell cell;
+                if(this.grid.TryGetValue(dest, out cell))
+                {
+                    if(!cells.Contains(cell))
+                    {
+                        cells.Add(cell);
+                    }
+                }
             }
         }
 
@@ -127,12 +158,10 @@ public abstract class AbstractTopology
 
     public abstract bool AreSameCell(Cell origin, Cell dest);
 
-    public abstract bool isWalkable(Cell cell);
+    public abstract bool IsWalkable(Cell cell);
 
-    // Here are the distance calculations for a specific topology.
-    // Some reminder : those calcutions must be symetric with x-axis and y-axis.
     public abstract int Distance(Vector2Int origin, Vector2Int dest);
 
-    public abstract Vector2Int ReverseDistance(Vector2Int origin, int distance);
+    public abstract List<Vector2Int> ReverseDistance(Vector2Int origin, int distance);
 
 }

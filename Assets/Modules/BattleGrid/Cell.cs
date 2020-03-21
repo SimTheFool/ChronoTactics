@@ -7,11 +7,11 @@ public class Cell : MonoBehaviour
 {
     private static Dictionary<Vector2Int, Cell> grid;
 
-    public enum TopologyType { Walkable, Viewable };
+    public enum TopologyType { Manhattan, Viewable };
     private static Dictionary<TopologyType, AbstractTopology> topologies;
 
     private CellPrototype prototype;
-    private CellPrototype getPrototype()
+    public CellPrototype getPrototype()
     {
         return this.prototype;
     }
@@ -45,12 +45,23 @@ public class Cell : MonoBehaviour
         if(Cell.topologies == null)
         {
             Cell.topologies = new Dictionary<TopologyType, AbstractTopology>();
-            //Cell.finderMap.Add(FinderType.Walkable, )
+            Cell.topologies.Add(TopologyType.Manhattan, new ManhattanTopology(Cell.grid));
         }
     }
 
     public List<Cell> findPathTo(Cell dest, TopologyType type)
     {
         return Cell.topologies[type].findPath(this, dest);
+    }
+
+    public bool IsWalkable(TopologyType type)
+    {
+        return topologies[type].IsWalkable(this);
+    }
+
+    // @Debug For debug purposes.
+    public void changeColor(Color color)
+    {
+        this.GetComponent<SpriteRenderer>().color = color;
     }
 }

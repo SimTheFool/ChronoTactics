@@ -24,7 +24,7 @@ public class BattleMapGenerator : MonoBehaviour
                 go.transform.parent = this.gameObject.transform;
 
                 Cell cell = go.GetComponent<Cell>();
-                CellPrototype prototype = (Random.Range(0, 14) == 0) ? this.cellPrototypes["wall"] : this.cellPrototypes["floor"];
+                CellPrototype prototype = (Random.Range(0, 4) == 0) ? this.cellPrototypes["wall"] : this.cellPrototypes["floor"];
                 cell.Initialize(prototype, new Vector2Int(x, y));                
             }
         }
