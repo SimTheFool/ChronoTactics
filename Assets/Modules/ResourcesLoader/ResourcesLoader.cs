@@ -30,7 +30,7 @@ public class ResourcesLoader : MonoBehaviour
 
             foreach(CellPrototype proto in Resources.LoadAll<CellPrototype>("Cell Prototypes"))
             {
-                instance.cellPrototypes.Add(proto.cellType, proto);
+                instance.cellPrototypes.Add(proto.cellName, proto);
             }
         }
 

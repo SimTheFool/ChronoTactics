@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee68f540ffdf0ca4186b77a816d3b647, type: 3}
   m_Name: Floor
   m_EditorClassIdentifier: 
-  cellType: floor
+  cellName: floor
   sprite: {fileID: 21300006, guid: 37b1c1aa9dbddb14db1a9a8979a17435, type: 3}
   isWalkable: 1

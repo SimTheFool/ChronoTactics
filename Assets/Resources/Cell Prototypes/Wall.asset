@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee68f540ffdf0ca4186b77a816d3b647, type: 3}
   m_Name: Wall
   m_EditorClassIdentifier: 
-  cellType: wall
-  sprite: {fileID: 21300000, guid: 37b1c1aa9dbddb14db1a9a8979a17435, type: 3}
+  cellName: wall
+  sprite: {fileID: 21300002, guid: 37b1c1aa9dbddb14db1a9a8979a17435, type: 3}
   isWalkable: 0

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BattleMapGenerator : MonoBehaviour
+public class BattleGridGenerator : MonoBehaviour
 {
     private Dictionary<string, CellPrototype> cellPrototypes;
     public GameObject cellPrefab;
