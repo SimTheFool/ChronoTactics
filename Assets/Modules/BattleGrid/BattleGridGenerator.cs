@@ -4,29 +4,28 @@ using UnityEngine;
 
 public class BattleGridGenerator : MonoBehaviour
 {
-    private Dictionary<string, CellPrototype> cellPrototypes;
     public GameObject cellPrefab;
+    public GridPrototype gridPrototype;
 
     public void Start()
     {
-        this.cellPrototypes = ResourcesLoader.getCellPrototypes();
-        this.GenerateGrid(15, 15);
+        this.GenerateGrid(gridPrototype);
     }
 
-    private void GenerateGrid(int width, int height)
+    private void GenerateGrid(GridPrototype gridProto)
     {
-        for(int x = 0; x < width; x++)
+        foreach(KeyValuePair<Vector2Int, CellPrototype> kvp in gridProto.grid)
         {
-            for(int y = 0; y < height; y++)
-            {
-                GameObject go = Instantiate(this.cellPrefab, new Vector2(x, y), Quaternion.identity);
-                go.name = "Cell";
-                go.transform.parent = this.gameObject.transform;
+            int x = kvp.Key.x;
+            int y = kvp.Key.y;
+            CellPrototype prototype = kvp.Value;
 
-                Cell cell = go.GetComponent<Cell>();
-                CellPrototype prototype = (Random.Range(0, 4) == 0) ? this.cellPrototypes["wall"] : this.cellPrototypes["floor"];
-                cell.Initialize(prototype, new Vector2Int(x, y));                
-            }
+            GameObject go = Instantiate(this.cellPrefab, new Vector2(x, y), Quaternion.identity);
+            go.name = "Cell";
+            go.transform.parent = this.gameObject.transform;
+
+            Cell cell = go.GetComponent<Cell>();
+            cell.Initialize(prototype, new Vector2Int(x, y)); 
         }
     }
 

@@ -64,4 +64,6 @@ public class Cell : MonoBehaviour
     {
         this.GetComponent<SpriteRenderer>().color = color;
     }
+
+    public int thisIndex;
 }

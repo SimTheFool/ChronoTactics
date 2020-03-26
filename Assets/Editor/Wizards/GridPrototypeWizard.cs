@@ -73,7 +73,7 @@ public class GridPrototypeWizard : EditorWindow
         this.DrawWidthAndHeightControl();
         GUILayout.Space(50);
 
-        for(int y = 0; y < this.gridProto.height; y++)
+        for(int y = this.gridProto.height; y > 0 ; y--)
         {
             GUILayout.BeginHorizontal();
             GUILayout.Space(50);

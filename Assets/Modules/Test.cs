@@ -20,25 +20,12 @@ public class Test : MonoBehaviour
 
             Cell[] cells = Resources.FindObjectsOfTypeAll<Cell>();
 
-            Cell startCell = null;
-            Cell endCell = null;
+            Cell startCell = cells[203];
+            Cell endCell = cells[146];
 
-            for(int i = 17; i < cells.Length; i++)
+            for(int i = 0; i < cells.Length; i++)
             {
-                if(cells[i].IsWalkable(Cell.TopologyType.Manhattan))
-                {
-                    startCell = cells[i];
-                    break;
-                }
-            }
-
-            for(int i = cells.Length - 17; i >= 0; i--)
-            {
-                if(cells[i].IsWalkable(Cell.TopologyType.Manhattan))
-                {
-                    endCell = cells[i];
-                    break;
-                }
+                cells[i].thisIndex = i ;
             }
 
             List<Cell> path = startCell.findPathTo(endCell, Cell.TopologyType.Manhattan);

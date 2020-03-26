@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class GridPrototype : ScriptableObject
 {
@@ -8,7 +7,7 @@ public class GridPrototype : ScriptableObject
     public int height;
 
     [SerializeField]
-    public CellDictionary grid = new CellDictionary();
+    public CellPrototypeDictionary grid = new CellPrototypeDictionary();
 
     public override string ToString()
     {
