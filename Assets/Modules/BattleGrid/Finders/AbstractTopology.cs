@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public abstract class AbstractTopology
 {
@@ -9,28 +10,39 @@ public abstract class AbstractTopology
     // Links each cell with their cost for pathfinding algorithm.
     private class Node
     {
+        private static int globalIncrement = 0;
+
         public Cell cell;
         public Node previous;
         public int f;
         public int h;
+        public int uid;
 
         public Node(Cell cell, Node previous = null, int f = 0, int h = 0)
         {
+            Node.globalIncrement++;
+
             this.cell = cell;
             this.previous = previous;
             this.f = f;
             this.h = h;
+            this.uid = Node.globalIncrement;
         }
     }
 
     // Comparer used by the SortedList in pathfinding algorithm.
     private class ByHCost : IComparer<Node>
     {
-        public int Compare(Node origin, Node dest)
+        public int Compare(Node n1, Node n2)
         {
-            int result = origin.h.CompareTo(dest.h);
-            result = (result == 0) ? -1 : result;
-            result = (origin.cell == dest.cell) ? 0 : result;
+            if(n1.cell == n2.cell)
+            {
+                return 0;
+            }
+
+            int result = n1.h.CompareTo(n2.h);
+            result = (result == 0) ? n2.f.CompareTo(n1.f) : result;
+            result = (result == 0) ? n1.uid.CompareTo(n2.uid) : result;
             return result;
         }
     }
@@ -41,8 +53,10 @@ public abstract class AbstractTopology
     }
 
     // A-star pathfinding algorithm.
-    public List<Cell> findPath(Cell origin, Cell dest)
+    public IEnumerator findPath(Cell origin, Cell dest)
     {
+        origin.changeColor(Color.red);
+        dest.changeColor(Color.red);
         // Node which must be evaluated.
         SortedSet<Node> openSet = new SortedSet<Node>(new ByHCost());
 
@@ -54,10 +68,14 @@ public abstract class AbstractTopology
 
         // We proceed while there are still cells to be evaluated.
         while(openSet.Count > 0)
-        {
+        {                   
             // We extract the best candidate of the openSet.
             Node currentNode = openSet.Min;
             openSet.Remove(currentNode);
+
+            currentNode.cell.changeColor(Color.white);
+            yield return new WaitForSeconds(0.2f);
+            currentNode.cell.changeColor(Color.red);
 
             // If this candidate is the destination cell, we have found a path and we can end the algorithm.
             if(this.AreSameCell(currentNode.cell, dest))
@@ -72,7 +90,8 @@ public abstract class AbstractTopology
                    tempNode = tempNode.previous;
                 }
 
-                return finalSet;
+                yield return null;
+                //return finalSet;
             }
 
             // We get all the cells in range of the candidate, and we determine if they are accessible.
@@ -86,12 +105,12 @@ public abstract class AbstractTopology
                 }
 
                 // If this cell has already been evaluated, we don't add it to candidate list.
-                if(closedSet.Exists(node => {
-                    return node.cell == cellInRange;
-                }))
+                if(closedSet.Exists(n => n.cell == cellInRange))
                 {
                     continue;
                 }
+
+                cellInRange.changeColor(Color.magenta);
 
                 // We create a new node with that cell.
                 int f = currentNode.f + 1;
@@ -99,7 +118,7 @@ public abstract class AbstractTopology
                 Node candidateNode = new Node(cellInRange, currentNode, f, h);
 
                 // We check if the node is already in the candidate list.
-                if(!openSet.Contains(candidateNode))
+                if(!openSet.Any(n => n.cell == candidateNode.cell))
                 {
                     // If it doesn't exist, we add that node to the candidate list.
                     openSet.Add(candidateNode);
@@ -107,21 +126,24 @@ public abstract class AbstractTopology
                 else
                 {
                     // If it exists, we try to remove it if it has a worse f cost. In that case, we had the new version of the node.
-                    int removedNode = openSet.RemoveWhere((Node x) => {
-                        return (x.f > candidateNode.f);
+                    int removedNode = openSet.RemoveWhere((Node n) => {
+                        bool isSame = n.cell == candidateNode.cell;
+                        bool hasWorseCost = n.f > candidateNode.f;
+                        return isSame && hasWorseCost;
                     });
 
                     if(removedNode > 0)
                     {
                         openSet.Add(candidateNode);
+                        cellInRange.fcost = f;
                     }
                 }
             }
 
             closedSet.Add(currentNode);
+            yield return new WaitForSeconds(0.7f);
         }
-
-        return null;
+        yield return null;
     }
 
     public List<Cell> GetCellsInRange(Cell origin, int min, int max)
@@ -132,8 +154,7 @@ public abstract class AbstractTopology
 
         for(int distance = min; distance <= max; distance++)
         {
-            // To reverse distance, we have to assume we are in [0, inf]/[0, inf].
-            List<Vector2Int> destinations = this.ReverseDistance(new Vector2Int(Mathf.Abs(originX), Mathf.Abs(originY)), distance);
+            List<Vector2Int> destinations = this.ReverseDistance(new Vector2Int(originX, originY), distance);
 
             foreach(Vector2Int dest in destinations)
             {

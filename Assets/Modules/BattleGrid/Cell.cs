@@ -7,7 +7,7 @@ public class Cell : MonoBehaviour
 {
     private static Dictionary<Vector2Int, Cell> grid;
 
-    public enum TopologyType { Manhattan, Viewable };
+    public enum TopologyType { Manhattan, CrowFly };
     private static Dictionary<TopologyType, AbstractTopology> topologies;
 
     private CellPrototype prototype;
@@ -46,12 +46,13 @@ public class Cell : MonoBehaviour
         {
             Cell.topologies = new Dictionary<TopologyType, AbstractTopology>();
             Cell.topologies.Add(TopologyType.Manhattan, new ManhattanTopology(Cell.grid));
+            Cell.topologies.Add(TopologyType.CrowFly, new CrowFlyTopology(Cell.grid));
         }
     }
 
-    public List<Cell> findPathTo(Cell dest, TopologyType type)
+    public void findPathTo(Cell dest, TopologyType type)
     {
-        return Cell.topologies[type].findPath(this, dest);
+        StartCoroutine(Cell.topologies[type].findPath(this, dest));
     }
 
     public bool IsWalkable(TopologyType type)
@@ -66,4 +67,6 @@ public class Cell : MonoBehaviour
     }
 
     public int thisIndex;
+    public int hcost = 0;
+    public int fcost = 0;
 }

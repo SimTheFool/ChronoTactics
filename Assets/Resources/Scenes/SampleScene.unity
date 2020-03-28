@@ -461,7 +461,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cellPrefab: {fileID: 6041774455227384921, guid: dce0670b0cf42b94f8e56c912a881905,
     type: 3}
-  gridPrototype: {fileID: 11400000, guid: 4436dbc27369fd84ea1ea01e263a127e, type: 2}
+  gridPrototype: {fileID: 11400000, guid: ace4e7350e838ae41b973a1ca89f9b02, type: 2}
 --- !u!4 &1030852437
 Transform:
   m_ObjectHideFlags: 0
