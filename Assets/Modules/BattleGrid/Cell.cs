@@ -3,12 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class Cell : MonoBehaviour
+public class Cell : MonoBehaviour, IPositionnable
 {
-    private static Dictionary<Vector2Int, Cell> grid;
-
-    public enum TopologyType { Manhattan, CrowFly };
-    private static Dictionary<TopologyType, AbstractTopology> topologies;
+    public static Dictionary<Vector2Int, Cell> grid;
 
     private CellPrototype prototype;
     public CellPrototype getPrototype()
@@ -22,50 +19,32 @@ public class Cell : MonoBehaviour
     }
 
     private Vector2Int coord;
-    private void setCoord(Vector2Int coord)
-    {
-        this.coord = coord;
-    }
-    public Vector2Int getCoord()
-    {
-        return this.coord;
-    }
 
     public void Initialize(CellPrototype prototype, Vector2Int coord)
     {
         this.setPrototype(prototype);
-        this.setCoord(coord);
+        this.coord = coord;
 
         if(Cell.grid == null)
         {
             Cell.grid = new Dictionary<Vector2Int, Cell>();
         }
         Cell.grid.Add(coord, this);
+    }
 
-        if(Cell.topologies == null)
+    public Vector2Int Coord
+    {
+        get
         {
-            Cell.topologies = new Dictionary<TopologyType, AbstractTopology>();
-            Cell.topologies.Add(TopologyType.Manhattan, new ManhattanTopology(Cell.grid));
-            Cell.topologies.Add(TopologyType.CrowFly, new CrowFlyTopology(Cell.grid));
+            return this.coord;
         }
     }
 
-    public void findPathTo(Cell dest, TopologyType type)
-    {
-        StartCoroutine(Cell.topologies[type].findPath(this, dest));
-    }
-
-    public bool IsWalkable(TopologyType type)
-    {
-        return topologies[type].IsWalkable(this);
-    }
-
     // @Debug For debug purposes.
-    public void changeColor(Color color)
+    public void ChangeColor(Color color)
     {
         this.GetComponent<SpriteRenderer>().color = color;
     }
-
     public int thisIndex;
     public int hcost = 0;
     public int fcost = 0;
