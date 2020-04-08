@@ -30,18 +30,7 @@ public class Test : MonoBehaviour
                 cells[i].thisIndex = i ;
             }
 
-            HashSet<Cell> path = pathfinder.findPath(startCell, endCell, new CrowFlyTopology(), new WalkableFilter());
-
-            if(path != null)
-            {
-                foreach(Cell cell in path)
-                {
-                    cell.ChangeColor(Color.magenta);
-                }
-            }
-
-            startCell.ChangeColor(Color.red);
-            endCell.ChangeColor(Color.red);
+            HashSet<Cell> path = pathfinder.FindPath_Debug(startCell, endCell, new ManhattanTopology(), new WalkableFilter());
         }
     }
 }

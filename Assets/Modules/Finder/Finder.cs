@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,26 +6,12 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
 {
     private Dictionary<Vector2Int, TConcretePositionnable> map;
 
-    // Links each T element with their cost for pathfinding algorithm.
-    private class Node
+    // Links each TConcretePositionnable element with their cost for pathfinding algorithm. We are using inheritance to instantiate PathfindingNode<TConcretePositionnable> in a more concise way.
+    private class Node: PathfindingNode<TConcretePositionnable>
     {
-        private static int globalIncrement = 0;
-
-        public TConcretePositionnable elem;
-        public Node previous;
-        public int f;
-        public int h;
-        public int uid;
-
-        public Node(TConcretePositionnable elem, Node previous = null, int f = 0, int h = 0)
+        public Node(TConcretePositionnable elem, Node previous = null, int f = 0, int h = 0): base(elem, previous, f, h)
         {
-            Node.globalIncrement++;
 
-            this.elem = elem;
-            this.previous = previous;
-            this.f = f;
-            this.h = h;
-            this.uid = Node.globalIncrement;
         }
     }
 
@@ -98,12 +83,22 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
     {
         // Nodes which must be evaluated.
         SortedSet<Node> openSet = new SortedSet<Node>(new ByHCost());
+        void AddToOpenSet(Node node)
+        {
+            openSet.Add(node);
+            this.OnAddToOpenSet.Invoke(node);
+        }
 
         // Nodes already evaluated.
         List<Node> closedSet = new List<Node>();
+        void AddToClosedSet(Node node)
+        {
+            closedSet.Add(node);
+            this.OnAddToClosedSet.Invoke(node);
+        }
 
         // The origin cell is the first node which will be evaluated.
-        openSet.Add(new Node(origin, null, 0, this.GetDistanceBetween(origin, dest, topology)));
+        AddToOpenSet(new Node(origin, null, 0, this.GetDistanceBetween(origin, dest, topology)));
 
         // We proceed while there are still cells to be evaluated.
         while(openSet.Count > 0)
@@ -111,6 +106,7 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
             // We extract the best candidate of the openSet.
             Node currentNode = openSet.Min;
             openSet.Remove(currentNode);
+            this.OnNewCurrentNode.Invoke(currentNode);
 
             // If this candidate is the destination IPositionnable, we have found a path and we can end the algorithm.
             if(this.GetDistanceBetween(currentNode.elem, dest, topology) == 0)
@@ -122,9 +118,10 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
                 while(tempNode != null)
                 {
                    finalSet.Add(tempNode.elem);
-                   tempNode = tempNode.previous;
+                   tempNode = (Node)tempNode.previous;
                 }
 
+                this.OnEndPathfinding.Invoke();
                 return finalSet;
             }
 
@@ -147,7 +144,7 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
                 if(!openSet.Any(n => n.elem == candidateNode.elem))
                 {
                     // If it doesn't exist, we add that node to the candidate list.
-                    openSet.Add(candidateNode);
+                    AddToOpenSet(candidateNode);
                 }
                 else
                 {
@@ -160,13 +157,30 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: Object
 
                     if(removedNode > 0)
                     {
-                        openSet.Add(candidateNode);
+                        AddToOpenSet(candidateNode);
+                        
                     }
                 }
             }
 
-            closedSet.Add(currentNode);
+            AddToClosedSet(currentNode);
         }
+
+        this.OnEndPathfinding.Invoke();
         return null;
+    }
+
+    // Debug fonctionnalities
+    public delegate void NodeEvent(PathfindingNode<TConcretePositionnable> node);
+    public delegate void PathfindingEvent();
+    public NodeEvent OnNewCurrentNode = delegate {};
+    public NodeEvent OnAddToOpenSet = delegate {};
+    public NodeEvent OnAddToClosedSet = delegate {};
+    public PathfindingEvent OnEndPathfinding = delegate {};
+
+    public HashSet<TConcretePositionnable> FindPath_Debug(TConcretePositionnable origin, TConcretePositionnable dest, ITopology topology, IFilter filter)
+    {
+        DebugPathfinding<TConcretePositionnable> debugger = new DebugPathfinding<TConcretePositionnable>(this);
+        return this.findPath(origin, dest, topology, filter);
     }
 }
