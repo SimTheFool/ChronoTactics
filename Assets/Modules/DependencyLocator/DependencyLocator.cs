@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class DependencyLocator : MonoBehaviour
 {
 
     private static DependencyLocator instance;
 
-    private static TimelineHandler timelineHandler = null;
-    private static Finder<Cell> pathfinder = null;
+    public TimelineHandler timelineHandler = null;
+    private Finder<TileFacade> pathfinder = null;
+    public TilemapFacade tilemap = null;
 
     private void Awake()
     {
@@ -23,21 +24,21 @@ public class DependencyLocator : MonoBehaviour
 
     public static TimelineHandler getTimelineHandler()
     {
-        if(timelineHandler == null)
-        {
-            timelineHandler = instance.gameObject.GetComponent<TimelineHandler>();
-        }
-
-        return timelineHandler;
+        return instance.timelineHandler;
     }
 
-    public static Finder<Cell> getPathfinder()
+    public static Finder<TileFacade> getPathfinder()
     {
-        if(pathfinder == null)
+        if(instance.pathfinder == null)
         {
-            pathfinder = new Finder<Cell>(Cell.grid);
+            TilemapFacade tilemap = DependencyLocator.getTilemap();
+            instance.pathfinder = new Finder<TileFacade>(tilemap.tilesMap);
         }
+        return instance.pathfinder;
+    }
 
-        return pathfinder;
+    public static TilemapFacade getTilemap()
+    {
+        return instance.tilemap;
     }
 }

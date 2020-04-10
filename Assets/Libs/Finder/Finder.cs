@@ -2,7 +2,7 @@
 using System.Linq;
 using UnityEngine;
 
-public class Finder<TConcretePositionnable> where TConcretePositionnable: Object, IPositionnable
+public class Finder<TConcretePositionnable> where TConcretePositionnable: class, IPositionnable
 {
     private Dictionary<Vector2Int, TConcretePositionnable> map;
 

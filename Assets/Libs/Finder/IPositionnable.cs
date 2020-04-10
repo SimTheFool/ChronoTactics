@@ -8,4 +8,6 @@ public interface IPositionnable
     {
         get;
     }
+
+    //List<IPositionnable> GetNonNaturalPositonnables(int dist);
 }

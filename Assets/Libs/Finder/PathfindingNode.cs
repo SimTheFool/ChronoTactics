@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PathfindingNode<TConcretePositionnable> where TConcretePositionnable: Object, IPositionnable
+public class PathfindingNode<TConcretePositionnable> where TConcretePositionnable: class, IPositionnable
 {
     private static int globalIncrement = 0;
 

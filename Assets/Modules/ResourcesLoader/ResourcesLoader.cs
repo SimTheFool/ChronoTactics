@@ -7,8 +7,8 @@ public class ResourcesLoader : MonoBehaviour
 
     private static ResourcesLoader instance;
 
-    public string cellPrototypesPath;
-    private Dictionary<string, CellPrototype> cellPrototypes;
+    /* public string cellPrototypesPath;
+    private Dictionary<string, CellPrototype> cellPrototypes; */
 
     private void Awake()
     {
@@ -22,7 +22,7 @@ public class ResourcesLoader : MonoBehaviour
         }
     }
 
-    public static Dictionary<string,CellPrototype> getCellPrototypes()
+    /* public static Dictionary<string,CellPrototype> getCellPrototypes()
     {
         if(instance.cellPrototypes == null)
         {
@@ -35,5 +35,5 @@ public class ResourcesLoader : MonoBehaviour
         }
 
         return instance.cellPrototypes;
-    }
+    } */
 }

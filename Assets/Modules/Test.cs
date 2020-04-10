@@ -1,11 +1,13 @@
-﻿using System.Collections;
+﻿using UnityEngine;
+using UnityEngine.Tilemaps;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class Test : MonoBehaviour
 {
 
     private bool foundPath = false;
+    public List<TileFacade> tiles = new List<TileFacade>();
+
 
     void Start()
     {
@@ -14,23 +16,26 @@ public class Test : MonoBehaviour
 
     void Update()
     {
-        if(!this.foundPath)
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            TileFacade tile = DependencyLocator.getTilemap().GetTileFromMousePos(mouseWorldPos);
+
+            if(tile != null)
+            {
+                this.tiles.Add(tile);
+            }
+        }
+
+        if(!this.foundPath && this.tiles.Count >= 2)
         {
             this.foundPath = true;
 
-            Finder<Cell> pathfinder = DependencyLocator.getPathfinder();
+            Finder<TileFacade> pathfinder = DependencyLocator.getPathfinder();
+            TileFacade startTile = this.tiles[0];
+            TileFacade endTile = this.tiles[1];
 
-            Cell[] cells = Resources.FindObjectsOfTypeAll<Cell>();
-
-            Cell startCell = cells[27];
-            Cell endCell = cells[195];
-
-            for(int i = 0; i < cells.Length; i++)
-            {
-                cells[i].thisIndex = i ;
-            }
-
-            HashSet<Cell> path = pathfinder.FindPath_Debug(startCell, endCell, new ManhattanTopology(), new WalkableFilter());
+            HashSet<TileFacade> path = pathfinder.FindPath_Debug(startTile, endTile, new CrowFlyTopology(), new WalkableFilter());
         }
     }
 }

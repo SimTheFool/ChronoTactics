@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEditor;
 
-public class DebugPathfinding<TConcretePositionnable> where TConcretePositionnable: Object, IPositionnable
+public class DebugPathfinding<TConcretePositionnable> where TConcretePositionnable: class, IPositionnable
 {
     private enum NodeType
     {
