@@ -1,85 +1,210 @@
-using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Turn
 {
-    private List<TimelineActor> inputActors;
-    private List<KeyValuePair<int, float>> priorities;
-
-    // Record all timeline actors state for this turn, process their priority for this turn, and output new timeline actors state
-    public List<TimelineActor> UpdateAllActors(List<TimelineActor> actors)
+    private Dictionary<TimelineAgent, int> inputAgentAtbs;
+    private Dictionary<TimelineAgent, int> outputAgentAtbs;
+    private SortedSet<KeyValuePair<TimelineAgent, float>> agentPriorities;
+    private class CompareAgentPriorities : IComparer<KeyValuePair<TimelineAgent, float>>
     {
-        this.inputActors = new List<TimelineActor>(actors);
-        this.priorities = new List<KeyValuePair<int, float>>();
-
-        List<TimelineActor> outputActors = new List<TimelineActor>();
-
-        for(int i = 0; i < inputActors.Count; i++)
+        public int Compare(KeyValuePair<TimelineAgent, float> p1, KeyValuePair<TimelineAgent, float> p2)
         {
-            outputActors.Add(this.EvaluateActorPriorities(i));
-        }
+            if(p1.Key == p2.Key && p1.Value == p2.Value)
+            {
+                return 0;
+            }
 
-        this.SortPriorities();
-        return outputActors;
+            int result = p1.Value.CompareTo(p2.Value);
+            result = (result == 0) ? p2.Key.Speed.CompareTo(p1.Key.Speed) : result;
+            result = (result == 0) ? p1.Key.Name.CompareTo(p2.Key.Name) : result;
+            return result;
+        }
     }
 
-    // From an index, get a timeline actor state from the inputActors, evaluate its priorities, and return a new timeline actor state
-    private TimelineActor EvaluateActorPriorities(int actorIndex)
+
+    private KeyValuePair<TimelineAgent, float> currentAgentPriority = new KeyValuePair<TimelineAgent, float>(null, -1);
+    private int turnNb = 0;
+
+    private Turn nextTurn = null;
+    public Turn NextTurn
     {
-        TimelineActor actor = this.inputActors[actorIndex];
-        int finalAtb = actor.getAtb() + actor.getSpeed();
+        get
+        {
+            return this.nextTurn;
+        }
+    }
+
+    private Dictionary<int, List<TimelineAgent>> remainingAgentsPerTurn;
+    private bool refreshRemainingAgentsPerTurn = true;
+    public Dictionary<int, List<TimelineAgent>> RemainingAgentsPerTurn
+    {
+        get
+        {
+            if(this.refreshRemainingAgentsPerTurn)
+            {
+                this.remainingAgentsPerTurn = this.GetRemainingAgentsPerTurn();
+                this.refreshRemainingAgentsPerTurn = false;
+            }
+
+            return this.remainingAgentsPerTurn;
+        }
+    }
+
+    public int Count
+    {
+        get
+        {
+            int count = this.RemainingAgentsPerTurn.Count;
+            count = (this.nextTurn == null) ? count : count + this.nextTurn.RemainingAgentsPerTurn.Count;
+            return count;
+        }
+    }
+
+
+    public Turn (HashSet<TimelineAgent> agents, int turnNb = 1)
+    {
+        this.inputAgentAtbs = new Dictionary<TimelineAgent, int>();
+        this.turnNb = turnNb;
+        foreach(TimelineAgent agent in agents)
+        {
+            this.inputAgentAtbs.Add(agent, agent.Atb);
+        }
+        this.Initialize();
+    }
+
+    public Turn (Dictionary<TimelineAgent, int> atbs, int turnNb = 1)
+    {
+        this.inputAgentAtbs = new Dictionary<TimelineAgent, int>(atbs);
+        this.turnNb = turnNb;
+        this.Initialize();
+    }
+
+    private void Initialize()
+    {
+        this.agentPriorities = new SortedSet<KeyValuePair<TimelineAgent, float>>(new CompareAgentPriorities());
+        this.outputAgentAtbs = new Dictionary<TimelineAgent, int>();
+        foreach(TimelineAgent agent in this.inputAgentAtbs.Keys)
+        {
+            this.EvaluatePriorities(agent);
+        }
+    }
+
+    public void AddOrUpdateAgent(TimelineAgent agent, int atb = -1)
+    {
+        this.refreshRemainingAgentsPerTurn = true;
+
+        this.inputAgentAtbs[agent] = (atb < 0) ? agent.Atb : atb;
+        this.EvaluatePriorities(agent);
+        
+        if(this.nextTurn == null) return;
+
+        this.nextTurn.AddOrUpdateAgent(agent, this.outputAgentAtbs[agent]);
+    }
+
+    public void RemoveAgent(TimelineAgent agent)
+    {
+        this.refreshRemainingAgentsPerTurn = true;
+
+        this.inputAgentAtbs.Remove(agent);
+        this.outputAgentAtbs.Remove(agent);
+        this.agentPriorities.RemoveWhere((KeyValuePair<TimelineAgent, float> agentPriority) => {
+            return agentPriority.Key == agent;
+        });
+        
+        if(this.nextTurn == null) return;
+
+        this.nextTurn.RemoveAgent(agent);
+    }
+
+    private void EvaluatePriorities(TimelineAgent agent)
+    {
+        int currentAtb = this.inputAgentAtbs[agent];
+        int finalAtb = currentAtb + agent.Speed;
         int canPlayNb = finalAtb / 100;
+
+        this.agentPriorities.RemoveWhere((KeyValuePair<TimelineAgent, float> priority) => {
+            return priority.Key == agent;
+        });
 
         for(int i = 1; i <= canPlayNb; i++)
         {
-            float priority = ((i * 100) - actor.getAtb()) / (float)actor.getSpeed();
-            this.priorities.Add(new KeyValuePair<int, float>(actorIndex, priority));
+            float priority = ((i * 100) - currentAtb) / (float)agent.Speed;
+            this.agentPriorities.Add(new KeyValuePair<TimelineAgent, float>(agent, priority));
         }
         
-        actor.setAtb(finalAtb % 100);
-        return actor;
+        this.outputAgentAtbs[agent] = finalAtb % 100;
     }
 
-    private void SortPriorities()
+    public void NewTurn()
     {
-        this.priorities.Sort((x, y) => {
-            int comparison = x.Value.CompareTo(y.Value);
-            
-            if(comparison == 0)
-            {
-                int speedX = this.inputActors[x.Key].getSpeed();
-                int speedY = this.inputActors[y.Key].getSpeed();
+        this.refreshRemainingAgentsPerTurn = true;
 
-                return speedX.CompareTo(speedY) * -1;
-            }
-
-            return comparison;
-        });
-    }
-
-    public int Count()
-    {
-        return priorities.Count;
-    }
-
-    public override string ToString()
-    {
-        string msg = "Turn infos";
-
-        msg += "\n Actors ::";
-        foreach(TimelineActor actor in this.inputActors)
+        if(this.nextTurn == null)
         {
-            msg += $" {actor.ToString()} [atb: {actor.getAtb()}]";
+            this.nextTurn = new Turn(this.outputAgentAtbs, this.turnNb + 1);
+            return;
         }
 
-        msg += "\n \n Priorities ::";
-        foreach(KeyValuePair<int, float> pair in this.priorities)
+        this.nextTurn.NewTurn();
+    }
+
+    public Turn MoveToNextTurn()
+    {
+        if(this.nextTurn == null || this.outputAgentAtbs.Count <= 0) return null;
+
+        foreach(KeyValuePair<TimelineAgent, int> agentAtb in this.outputAgentAtbs)
         {
-            TimelineActor actor = this.inputActors[pair.Key];
-            msg += $"\n {actor} [priority: {pair.Value.ToString()}, speed: {actor.getSpeed()}]";
+            agentAtb.Key.Atb = agentAtb.Value;
         }
 
-        return msg;
+        return this.nextTurn;
     }
+
+    public TimelineAgent MoveToNextAgent()
+    {
+        this.refreshRemainingAgentsPerTurn = true;
+
+        List<KeyValuePair<TimelineAgent, float>> allAgentsPriorities = this.GetAllAgentPrioritiesAfterCurrent();
+
+        if(allAgentsPriorities.Count == 0) return null;
+
+        this.currentAgentPriority = allAgentsPriorities[0];
+        return this.currentAgentPriority.Key;
+    }
+
+    public Dictionary<int, List<TimelineAgent>> GetRemainingAgentsPerTurn()
+    {
+        Dictionary<int, List<TimelineAgent>> agentsPerTurn = new Dictionary<int, List<TimelineAgent>>();
+        List<TimelineAgent> result = this.GetAllAgentPrioritiesAfterCurrent().Select((KeyValuePair<TimelineAgent, float> agentPriority) => {
+                return agentPriority.Key;
+            }).ToList();
+
+        agentsPerTurn[this.turnNb] = result;
+
+        if(this.nextTurn == null)
+        {
+            return agentsPerTurn;
+        }
+
+        foreach(KeyValuePair<int, List<TimelineAgent>> kvp in this.nextTurn.GetRemainingAgentsPerTurn())
+        {
+            agentsPerTurn[kvp.Key] = kvp.Value;
+        }
+
+        return agentsPerTurn;
+    }
+
+    private List<KeyValuePair<TimelineAgent, float>> GetAllAgentPrioritiesAfterCurrent()
+    {
+        List<KeyValuePair<TimelineAgent, float>> result = new List<KeyValuePair<TimelineAgent, float>>();
+        KeyValuePair<TimelineAgent, float> upperAgentPriority = new KeyValuePair<TimelineAgent, float>(null, 1.1f);
+
+        result = this.agentPriorities.GetViewBetween(this.currentAgentPriority, upperAgentPriority).ToList();
+        result.Remove(this.currentAgentPriority);
+
+        return result;
+    }
+
 }

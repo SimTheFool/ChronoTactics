@@ -291,7 +291,6 @@ GameObject:
   - component: {fileID: 640794059}
   - component: {fileID: 640794058}
   - component: {fileID: 640794060}
-  - component: {fileID: 640794057}
   m_Layer: 0
   m_Name: Dependencies
   m_TagString: Untagged
@@ -299,18 +298,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &640794057
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640794056}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9191cf366f5428e4f884b9113b4ceca4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &640794058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 141b60c409c18a741ada89bc231908e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timelineHandler: {fileID: 640794057}
+  timelineHandler: {fileID: 1938340946}
   tilemap: {fileID: 1607431800}
 --- !u!4 &640794059
 Transform:
@@ -361,6 +348,7 @@ GameObject:
   m_Component:
   - component: {fileID: 996709869}
   - component: {fileID: 996709870}
+  - component: {fileID: 996709871}
   m_Layer: 0
   m_Name: Bernard
   m_TagString: Untagged
@@ -396,6 +384,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: Bernard
   speed: 150
+--- !u!114 &996709871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996709868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226550e5c9d4db14889719202b7f6a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1007561864
 GameObject:
   m_ObjectHideFlags: 0
@@ -406,6 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1007561865}
   - component: {fileID: 1007561866}
+  - component: {fileID: 1007561867}
   m_Layer: 0
   m_Name: Roger
   m_TagString: Untagged
@@ -441,6 +442,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: Roger
   speed: 50
+--- !u!114 &1007561867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1007561864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226550e5c9d4db14889719202b7f6a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1474076040
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,6 +464,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1474076041}
   - component: {fileID: 1474076042}
+  - component: {fileID: 1474076043}
   m_Layer: 0
   m_Name: Paulette
   m_TagString: Untagged
@@ -486,6 +500,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   actorName: Paulette
   speed: 100
+--- !u!114 &1474076043
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1474076040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 226550e5c9d4db14889719202b7f6a61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1607431796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1785,4 +1811,49 @@ Transform:
   - {fileID: 1607431797}
   m_Father: {fileID: 0}
   m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1938340945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1938340947}
+  - component: {fileID: 1938340946}
+  m_Layer: 0
+  m_Name: Timeline
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1938340946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938340945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9191cf366f5428e4f884b9113b4ceca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  secondsPerAgent: 10
+  previewedElemMinNb: 20
+--- !u!4 &1938340947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1938340945}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 5.8671646, y: 4.9045057, z: -5.6972656}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

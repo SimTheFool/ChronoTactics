@@ -4,36 +4,38 @@ public class Actor: MonoBehaviour
 {
     [SerializeField]
     private string actorName;
-
-    public string getActorName()
+    public string Name
     {
-        return this.actorName;
+        get
+        {
+            return this.actorName;
+        }
     }
 
-    public void setActorName(string actorName)
+    private int atb = 0;
+    public int Atb
     {
-        this.actorName = actorName;
+        get
+        {
+            return this.atb;
+        }
+
+        set
+        {
+            this.atb = value;
+        }
     }
+
 
     [SerializeField]
     private int speed;
-
-    public int getSpeed()
+    public int Speed
     {
-        return this.speed;
+        get
+        {
+            return this.speed;
+        }
     }
-
-    public void setSpeed(int speed)
-    {
-        this.speed = speed;
-    }
-
-
-    public void Awake()
-    {
-        DependencyLocator.getTimelineHandler().registerActor(this);
-    }
-
 
     public override string ToString()
     {
