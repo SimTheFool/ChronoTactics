@@ -1,11 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class TimelineHandler : MonoBehaviour
 {
     private TimelineAgent currentAgent = null;
     private float timer = 0;
+    public float Timer
+    {
+        get
+        {
+            return this.timer;
+        }
+    }
     [SerializeField]
     private float secondsPerAgent = 15f;
 
@@ -13,6 +19,14 @@ public class TimelineHandler : MonoBehaviour
     private Turn turn = null;
     [SerializeField]
     private int previewedElemMinNb = 20;
+    public Dictionary<int, List<TimelineAgent>> RemainingAgentsPerTurn
+    {
+        get
+        {
+            if(this.turn == null) return null;
+            return this.turn.RemainingAgentsPerTurn;
+        }
+    }
     
     private bool isInit = true;
 
@@ -109,7 +123,12 @@ public class TimelineHandler : MonoBehaviour
         this.turn.RemoveAgent(agent);
     }
 
-    private void OnGUI()
+    public void EndTurn()
+    {
+        this.timer = -1;
+    }
+
+    /* private void OnGUI()
     {
         int dim = 20;
 
@@ -130,5 +149,5 @@ public class TimelineHandler : MonoBehaviour
                 GUI.Label(new Rect(100 + k*dim, 10 + turnNb*dim*3 + 2*dim, dim, dim), $"{agent.Speed}");
             }
         }
-    }
+    } */
 }

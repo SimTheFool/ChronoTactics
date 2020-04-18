@@ -202,7 +202,6 @@ public class Turn
         KeyValuePair<TimelineAgent, float> upperAgentPriority = new KeyValuePair<TimelineAgent, float>(null, 1.1f);
 
         result = this.agentPriorities.GetViewBetween(this.currentAgentPriority, upperAgentPriority).ToList();
-        result.Remove(this.currentAgentPriority);
 
         return result;
     }
