@@ -167,6 +167,7 @@ public class Turn
         this.refreshRemainingAgentsPerTurn = true;
 
         List<KeyValuePair<TimelineAgent, float>> allAgentsPriorities = this.GetAllAgentPrioritiesAfterCurrent();
+        allAgentsPriorities.Remove(this.currentAgentPriority);
 
         if(allAgentsPriorities.Count == 0) return null;
 
@@ -174,7 +175,7 @@ public class Turn
         return this.currentAgentPriority.Key;
     }
 
-    public Dictionary<int, List<TimelineAgent>> GetRemainingAgentsPerTurn()
+    private Dictionary<int, List<TimelineAgent>> GetRemainingAgentsPerTurn()
     {
         Dictionary<int, List<TimelineAgent>> agentsPerTurn = new Dictionary<int, List<TimelineAgent>>();
         List<TimelineAgent> result = this.GetAllAgentPrioritiesAfterCurrent().Select((KeyValuePair<TimelineAgent, float> agentPriority) => {

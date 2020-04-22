@@ -1,7 +1,18 @@
 using UnityEngine;
+using UnityEngine.Events;
+using System.Collections.Generic;
 
 public class Actor: MonoBehaviour
 {
+    private List<KeyValuePair<string, UnityAction>> actions = new List<KeyValuePair<string, UnityAction>>();
+    public List<KeyValuePair<string, UnityAction>> Actions
+    {
+        get
+        {
+            return this.actions;
+        }
+    }
+
     [SerializeField]
     private string actorName;
     public string Name
@@ -12,21 +23,6 @@ public class Actor: MonoBehaviour
         }
     }
 
-    private int atb = 0;
-    public int Atb
-    {
-        get
-        {
-            return this.atb;
-        }
-
-        set
-        {
-            this.atb = value;
-        }
-    }
-
-
     [SerializeField]
     private int speed;
     public int Speed
@@ -35,6 +31,17 @@ public class Actor: MonoBehaviour
         {
             return this.speed;
         }
+    }
+
+    void Start()
+    {
+        this.actions.Add(new KeyValuePair<string, UnityAction>($"action1 {this.actorName}", () => {
+            Debug.Log("action 1");
+        }));
+
+        this.actions.Add(new KeyValuePair<string, UnityAction>($"action2 {this.actorName}", () => {
+            Debug.Log("action 2");
+        }));
     }
 
     public override string ToString()

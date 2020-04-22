@@ -40,4 +40,10 @@ public class DependencyLocator : MonoBehaviour
     {
         return instance.tilemap;
     }
+
+    public static Actor getCurrentActor()
+    {
+        TimelineAgent currentAgent = DependencyLocator.getTimelineHandler().CurrentAgent;
+        return (currentAgent == null) ? null : currentAgent.Actor;
+    }
 }

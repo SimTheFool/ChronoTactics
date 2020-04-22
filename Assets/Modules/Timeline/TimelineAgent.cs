@@ -3,17 +3,25 @@ using UnityEngine;
 public class TimelineAgent : MonoBehaviour 
 {
     private Actor actor;
+    public Actor Actor
+    {
+        get
+        {
+            return this.actor;
+        }
+    }
 
+    private int atb = 0;
     public int Atb
     {
         get
         {
-            return this.actor.Atb;
+            return this.atb;
         }
 
         set
         {
-            this.actor.Atb = value;
+            this.atb = value;
         }
     }
 

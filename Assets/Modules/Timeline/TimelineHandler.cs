@@ -4,6 +4,14 @@ using UnityEngine;
 public class TimelineHandler : MonoBehaviour
 {
     private TimelineAgent currentAgent = null;
+    public TimelineAgent CurrentAgent
+    {
+        get
+        {
+            return this.currentAgent;
+        }
+    }
+    private Turn turn = null;
     private float timer = 0;
     public float Timer
     {
@@ -12,13 +20,6 @@ public class TimelineHandler : MonoBehaviour
             return this.timer;
         }
     }
-    [SerializeField]
-    private float secondsPerAgent = 15f;
-
-    private HashSet<TimelineAgent> agentsAtStart = new HashSet<TimelineAgent>();
-    private Turn turn = null;
-    [SerializeField]
-    private int previewedElemMinNb = 20;
     public Dictionary<int, List<TimelineAgent>> RemainingAgentsPerTurn
     {
         get
@@ -28,6 +29,14 @@ public class TimelineHandler : MonoBehaviour
         }
     }
     
+
+    
+    [SerializeField]
+    private int previewedElemMinNb = 20;
+    [SerializeField]
+    private float secondsPerAgent = 15f;
+    
+    private HashSet<TimelineAgent> agentsAtStart = new HashSet<TimelineAgent>();
     private bool isInit = true;
 
     private void Awake() {
