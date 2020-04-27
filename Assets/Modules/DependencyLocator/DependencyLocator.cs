@@ -7,7 +7,8 @@ public class DependencyLocator : MonoBehaviour
 
     public TimelineHandler timelineHandler = null;
     private Finder<TileFacade> pathfinder = null;
-    public TilemapFacade tilemap = null;
+    public TilemapFacade tilemapFacade = null;
+    public CombatControls combatControls = null;
 
     private void Awake()
     {
@@ -30,20 +31,19 @@ public class DependencyLocator : MonoBehaviour
     {
         if(instance.pathfinder == null)
         {
-            TilemapFacade tilemap = DependencyLocator.getTilemap();
+            TilemapFacade tilemap = DependencyLocator.getTilemapFacade();
             instance.pathfinder = new Finder<TileFacade>(tilemap.tilesMap);
         }
         return instance.pathfinder;
     }
 
-    public static TilemapFacade getTilemap()
+    public static TilemapFacade getTilemapFacade()
     {
-        return instance.tilemap;
+        return instance.tilemapFacade;
     }
 
-    public static Actor getCurrentActor()
+    public static CombatControls GetCombatControls()
     {
-        TimelineAgent currentAgent = DependencyLocator.getTimelineHandler().CurrentAgent;
-        return (currentAgent == null) ? null : currentAgent.Actor;
+        return instance.combatControls;
     }
 }

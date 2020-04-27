@@ -14,6 +14,16 @@ public class Actor: MonoBehaviour
     }
 
     [SerializeField]
+    private bool playable = true;
+    public bool Playable
+    {
+        get
+        {
+            return this.playable;
+        }
+    }
+
+    [SerializeField]
     private string actorName;
     public string Name
     {

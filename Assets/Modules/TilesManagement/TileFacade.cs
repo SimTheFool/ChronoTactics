@@ -1,11 +1,8 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class TileFacade : IPositionnable
 {
     private Vector2Int coord;
-    private TileBase tileBase;
-
     public Vector2Int Coord
     {
         get
@@ -14,17 +11,28 @@ public class TileFacade : IPositionnable
         }
     }
 
-    public TileBase TileBase
+    private GroundTile groundTile;
+    public GroundTile GroundTile
     {
         get
         {
-            return this.tileBase;
+            return this.groundTile;
         }
     }
 
-    public TileFacade(Vector2Int coord, TileBase tileBase)
+    private SpecialTile specialTile;
+    public SpecialTile SpecialTile
+    {
+        get
+        {
+            return this.specialTile;
+        }
+    }
+
+    public TileFacade(Vector2Int coord, GroundTile groundTile, SpecialTile specialTile = null)
     {
         this.coord = coord;
-        this.tileBase = tileBase;
+        this.groundTile = groundTile;
+        this.specialTile = specialTile;
     }
 }

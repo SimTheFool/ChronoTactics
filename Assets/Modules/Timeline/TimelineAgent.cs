@@ -1,8 +1,12 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Actor))]
+[RequireComponent(typeof(BehaviourStateMachine))]
 public class TimelineAgent : MonoBehaviour 
 {
-    private Actor actor;
+    private BehaviourStateMachine actorBehaviour = null;
+
+    private Actor actor = null;
     public Actor Actor
     {
         get
@@ -44,20 +48,17 @@ public class TimelineAgent : MonoBehaviour
     private void Start()
     {
         this.actor = this.GetComponent<Actor>();
+        this.actorBehaviour = this.GetComponent<BehaviourStateMachine>();
         DependencyLocator.getTimelineHandler().AddOrUpdateAgent(this);
     }
 
-    /* private void OnDestroy() {
-        DependencyLocator.getTimelineHandler().RemoveAgent(this);
-    } */
-
     public void EnablePlaying()
     {
-        Debug.Log($"{this.Name} can play");
+        this.actorBehaviour.SetStateActive();
     }
 
     public void DisablePlaying()
     {
-        //Debug.Log("set can't play on actor");
+        this.actorBehaviour.SetStateNotActive();
     }
 }

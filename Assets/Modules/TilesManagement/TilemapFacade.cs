@@ -6,13 +6,9 @@ public class TilemapFacade : MonoBehaviour
 {
     public Dictionary<Vector2Int, TileFacade> tilesMap = new Dictionary<Vector2Int, TileFacade>();
 
-    public Tilemap tilemap;
+    public Tilemap groundMap;
+    public Tilemap specialMap;
     public BoundsInt bounds;
-
-    private void Awake()
-    {
-        this.tilemap = this.GetComponent<Tilemap>();
-    }
 
     private void Start()
     {
@@ -20,14 +16,15 @@ public class TilemapFacade : MonoBehaviour
         {
             for(int y = this.bounds.position.y; y < this.bounds.position.y + this.bounds.size.y; y++)
             {
-                TileBase tileBase = this.tilemap.GetTile(new Vector3Int(x, y, 0));
+                GroundTile groundTile = (GroundTile)this.groundMap.GetTile(new Vector3Int(x, y, 0));
+                SpecialTile specialTile = (SpecialTile)this.specialMap.GetTile(new Vector3Int(x, y, 0));
 
-                if(tileBase == null)
+                if(groundTile == null)
                 {
                     continue;
                 }
 
-                TileFacade tile = new TileFacade(new Vector2Int(x, y), tileBase);
+                TileFacade tile = new TileFacade(new Vector2Int(x, y), groundTile, specialTile);
                 this.tilesMap.Add(new Vector2Int(x, y), tile);
             }
         }
@@ -46,7 +43,7 @@ public class TilemapFacade : MonoBehaviour
 
     public TileFacade GetTileFromMousePos(Vector3 pos)
     {
-        Vector2Int coord = (Vector2Int)this.tilemap.WorldToCell(pos);
+        Vector2Int coord = (Vector2Int)this.groundMap.WorldToCell(pos);
         return this.GetTileFromCoord(coord);
     }
 }

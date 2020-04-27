@@ -127,5 +127,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 624c828bc32f28d43b475a6d23894a43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  agentUI: {fileID: 9012239598150543297, guid: 0fdcf9c106d35744eb664621b762a518, type: 3}
-  agents: []
+  uIPrefab: {fileID: 9012239598150543297, guid: 0fdcf9c106d35744eb664621b762a518,
+    type: 3}
