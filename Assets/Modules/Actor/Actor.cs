@@ -13,6 +13,30 @@ public class Actor: MonoBehaviour
         }
     }
 
+    private TileFacade tile = null;
+    public TileFacade Tile
+    {
+        get
+        {
+            return this.tile;
+        }
+    }
+
+    [SerializeField]
+    private int health = 100;
+    public int Health
+    {
+        get
+        {
+            return this.health;
+        }
+
+        set
+        {
+            this.health = value;
+        }
+    }
+
     [SerializeField]
     private bool playable = true;
     public bool Playable
@@ -24,7 +48,7 @@ public class Actor: MonoBehaviour
     }
 
     [SerializeField]
-    private string actorName;
+    private string actorName = "";
     public string Name
     {
         get
@@ -34,7 +58,7 @@ public class Actor: MonoBehaviour
     }
 
     [SerializeField]
-    private int speed;
+    private int speed = 100;
     public int Speed
     {
         get

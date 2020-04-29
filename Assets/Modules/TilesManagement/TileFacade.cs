@@ -11,6 +11,15 @@ public class TileFacade : IPositionnable
         }
     }
 
+    private Vector3 worldPos;
+    public Vector3 WorldPos
+    {
+        get
+        {
+            return this.worldPos;
+        }
+    }
+
     private GroundTile groundTile;
     public GroundTile GroundTile
     {
@@ -29,9 +38,10 @@ public class TileFacade : IPositionnable
         }
     }
 
-    public TileFacade(Vector2Int coord, GroundTile groundTile, SpecialTile specialTile = null)
+    public TileFacade(Vector2Int coord, Vector3 worldPos, GroundTile groundTile, SpecialTile specialTile = null)
     {
         this.coord = coord;
+        this.worldPos = worldPos;
         this.groundTile = groundTile;
         this.specialTile = specialTile;
     }

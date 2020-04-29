@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class UIChildrenGenerator : MonoBehaviour
 {
     [SerializeField]
-    private GameObject uIPrefab;
+    private GameObject uIPrefab = null;
 
     private List<GameObject> activeUIs = new List<GameObject>();
     private static Dictionary<int, List<GameObject>> uIsPools = new Dictionary<int, List<GameObject>>();

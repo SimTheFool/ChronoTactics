@@ -24,7 +24,8 @@ public class TilemapFacade : MonoBehaviour
                     continue;
                 }
 
-                TileFacade tile = new TileFacade(new Vector2Int(x, y), groundTile, specialTile);
+                Vector2Int coord = new Vector2Int(x, y);
+                TileFacade tile = new TileFacade(coord, this.GetWorldPosFromCoord(coord), groundTile, specialTile);
                 this.tilesMap.Add(new Vector2Int(x, y), tile);
             }
         }
@@ -45,5 +46,10 @@ public class TilemapFacade : MonoBehaviour
     {
         Vector2Int coord = (Vector2Int)this.groundMap.WorldToCell(pos);
         return this.GetTileFromCoord(coord);
+    }
+
+    public Vector3 GetWorldPosFromCoord(Vector2Int coord)
+    {
+        return this.groundMap.GetCellCenterWorld((Vector3Int)coord);
     }
 }
