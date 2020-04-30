@@ -1,14 +1,21 @@
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using System.Collections.Generic;
+using System.Linq;
 
 public class TilemapFacade : MonoBehaviour
 {
     public Dictionary<Vector2Int, TileFacade> tilesMap = new Dictionary<Vector2Int, TileFacade>();
 
-    public Tilemap groundMap;
-    public Tilemap specialMap;
-    public BoundsInt bounds;
+    [SerializeField]
+    private Tilemap groundMap = null;
+    [SerializeField]
+    private Tilemap specialMap = null;
+    [SerializeField]
+    private BoundsInt bounds;
+
+    private bool initFlag = false;
+    private List<TilemapAgent> agentsToLocateOnStart = new List<TilemapAgent>();
 
     private void Start()
     {
@@ -29,8 +36,14 @@ public class TilemapFacade : MonoBehaviour
                 this.tilesMap.Add(new Vector2Int(x, y), tile);
             }
         }
-    }
 
+        this.initFlag = true;
+
+        foreach(TilemapAgent agent in this.agentsToLocateOnStart)
+        {
+            this.LocateAgentOnStartingTile(agent);
+        }
+    }
     public TileFacade GetTileFromCoord(Vector2Int coord)
     {
         TileFacade tile;
@@ -42,14 +55,34 @@ public class TilemapFacade : MonoBehaviour
         return null;
     }
 
-    public TileFacade GetTileFromMousePos(Vector3 pos)
+    public TileFacade GetTileFromWorldPos(Vector3 pos)
     {
         Vector2Int coord = (Vector2Int)this.groundMap.WorldToCell(pos);
         return this.GetTileFromCoord(coord);
     }
 
+    public TileFacade GetOneStartingTile()
+    {
+        return this.tilesMap.Select(kvp => kvp.Value).Where(tile => tile.SpecialTile != null && tile.Agent == null).FirstOrDefault();
+    }
+
     public Vector3 GetWorldPosFromCoord(Vector2Int coord)
     {
         return this.groundMap.GetCellCenterWorld((Vector3Int)coord);
+    }
+
+    public void LocateAgentOnStartingTile(TilemapAgent agent)
+    {
+        TileFacade startingTile = this.GetOneStartingTile();
+
+        if(this.initFlag)
+        {
+            agent.SetTile(startingTile);
+            startingTile.Agent = agent;
+            agent.transform.position = startingTile.WorldPos;
+            return;
+        }
+
+        this.agentsToLocateOnStart.Add(agent);
     }
 }

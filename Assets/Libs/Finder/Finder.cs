@@ -113,6 +113,7 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: class,
             {
                 // Rebuilding the final path and returning the list of cells.
                 HashSet<TConcretePositionnable> finalSet = new HashSet<TConcretePositionnable>();
+                finalSet.Add(currentNode.elem);
                 Node tempNode =  closedSet[closedSet.Count - 1];
 
                 while(tempNode != null)
@@ -122,6 +123,8 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: class,
                 }
 
                 this.OnEndPathfinding.Invoke();
+
+                finalSet = new HashSet<TConcretePositionnable>(finalSet.Reverse());
                 return finalSet;
             }
 

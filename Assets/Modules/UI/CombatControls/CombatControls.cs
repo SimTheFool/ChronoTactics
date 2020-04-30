@@ -1,29 +1,42 @@
 using UnityEngine;
 using UnityEngine.Events;
-using System.Collections.Generic;
 
 public class CombatControls : MonoBehaviour
 {
-    private List<KeyValuePair<string, UnityAction>> actions;
-    public List<KeyValuePair<string, UnityAction>> Actions
+    private Actor actor;
+    public Actor Actor
     {
         get
         {
-            return this.actions;
+            return this.actor;
         }
     }
 
-    public void SetActions(List<KeyValuePair<string, UnityAction>> actions)
+    private UnityAction<Skill> clickListener = null;
+    public UnityAction<Skill> ClickListener
     {
-        this.actions = actions;
+        get
+        {
+            return this.clickListener;
+        }
     }
 
-    public void EnableCombatControls()
+    public void SetClickListener(UnityAction<Skill> clickListener)
+    {
+        this.clickListener = clickListener;
+    }
+
+    public void SetActor(Actor actor)
+    {
+        this.actor = actor;
+    }
+
+    public void Enable()
     {
         this.gameObject.SetActive(true);
     }
 
-    public void DisableCombatControls()
+    public void Disable()
     {
         this.gameObject.SetActive(false);
     }

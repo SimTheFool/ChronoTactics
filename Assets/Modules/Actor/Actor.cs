@@ -1,24 +1,75 @@
 using UnityEngine;
 using UnityEngine.Events;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Actor: MonoBehaviour
 {
-    private List<KeyValuePair<string, UnityAction>> actions = new List<KeyValuePair<string, UnityAction>>();
-    public List<KeyValuePair<string, UnityAction>> Actions
+    [SerializeField]
+    private Skill moveSkill = null;
+    public Skill MoveSkill
     {
         get
         {
-            return this.actions;
+            return this.moveSkill;
         }
     }
 
-    private TileFacade tile = null;
+    [SerializeField]
+    private Skill endTurnSkill = null;
+    public Skill EndTurnSkill
+    {
+        get
+        {
+            return this.endTurnSkill;
+        }
+    }
+
+    [SerializeField]
+    private List<Skill> otherSkills = null;
+    public List<Skill> OtherSkills
+    {
+        get
+        {
+            return this.otherSkills;
+        }
+    }
+
+    public List<Skill> Skills
+    {
+        get
+        {
+            List<Skill> skills = new List<Skill>(this.otherSkills);
+            skills.Add(this.moveSkill);
+            skills.Add(this.endTurnSkill);
+            return skills;
+        }
+    }
+
+    private Skill selectedSkill = null;
+    public Skill SelectedSkill
+    {
+        get
+        {
+            return this.selectedSkill;
+        }
+        set
+        {
+            this.selectedSkill = value;
+        }
+    }
+
+    private TilemapAgent tilemapAgent;
+
     public TileFacade Tile
     {
         get
         {
-            return this.tile;
+            return this.tilemapAgent.GetTile();
+        }
+        set
+        {
+            this.tilemapAgent.SetTile(value);
         }
     }
 
@@ -69,13 +120,7 @@ public class Actor: MonoBehaviour
 
     void Start()
     {
-        this.actions.Add(new KeyValuePair<string, UnityAction>($"action1 {this.actorName}", () => {
-            Debug.Log("action 1");
-        }));
-
-        this.actions.Add(new KeyValuePair<string, UnityAction>($"action2 {this.actorName}", () => {
-            Debug.Log("action 2");
-        }));
+        this.tilemapAgent = this.GetComponent<TilemapAgent>();
     }
 
     public override string ToString()

@@ -152,7 +152,7 @@ Transform:
   - {fileID: 2097568456}
   - {fileID: 598604016}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &194734448
 PrefabInstance:
@@ -165,6 +165,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Paulette
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083924, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083925, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
@@ -221,6 +226,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: otherSkills.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: moveSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: endTurnSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: otherSkills.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b750bd054d93054fa34816c333906b8,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: playable
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcc250b6cc000f40a9378f43ae795d3, type: 3}
 --- !u!1 &424011519
@@ -239,7 +272,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &424011520
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -247,7 +280,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424011519}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 26e362f53a57b3f4bb6029e051a7a581, type: 3}
   m_Name: 
@@ -277,6 +310,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Roger
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083924, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083925, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
@@ -335,6 +373,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
+      propertyPath: otherSkills.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
       propertyPath: actorName
       value: Roger
       objectReference: {fileID: 0}
@@ -348,6 +391,24 @@ PrefabInstance:
       propertyPath: playable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: moveSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: endTurnSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: otherSkills.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b750bd054d93054fa34816c333906b8,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcc250b6cc000f40a9378f43ae795d3, type: 3}
 --- !u!1 &519420028
@@ -399,11 +460,11 @@ Camera:
     y: 0
     width: 1
     height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
+  near clip plane: -0.14
+  far clip plane: 1000.18
   field of view: 79
   orthographic: 1
-  orthographic size: 5.97
+  orthographic size: 7.1
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
@@ -472,6 +533,7 @@ MonoBehaviour:
   timelineHandler: {fileID: 1938340946}
   tilemapFacade: {fileID: 1786458972}
   combatControls: {fileID: 1758791186}
+  skillQueueResolver: {fileID: 895705145}
 --- !u!4 &640794059
 Transform:
   m_ObjectHideFlags: 0
@@ -504,6 +566,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1910010231}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &895705144
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 895705146}
+  - component: {fileID: 895705145}
+  m_Layer: 0
+  m_Name: SkillQueueResolver
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &895705145
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895705144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4182e9808a2c2834a9bb200f618e9e29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &895705146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 895705144}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 960, y: 540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1607431796
 GameObject:
   m_ObjectHideFlags: 0
@@ -1991,7 +2096,7 @@ Transform:
   - {fileID: 1607431797}
   - {fileID: 1639623437}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1786458972
 MonoBehaviour:
@@ -2151,6 +2256,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
+      propertyPath: otherSkills.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
       propertyPath: actorName
       value: Bernard
       objectReference: {fileID: 0}
@@ -2162,8 +2272,26 @@ PrefabInstance:
     - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: playable
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: moveSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: endTurnSkill
+      value: 
+      objectReference: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340,
+        type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: otherSkills.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 7b750bd054d93054fa34816c333906b8,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcc250b6cc000f40a9378f43ae795d3, type: 3}
 --- !u!1 &1938340945
@@ -2209,7 +2337,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1947828577
 GameObject:
@@ -2552,11 +2680,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Combat Controls Panel
-      objectReference: {fileID: 0}
-    - target: {fileID: 8880450297435072065, guid: dc0fd02c5c44754499a15df782ecf811,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc0fd02c5c44754499a15df782ecf811, type: 3}

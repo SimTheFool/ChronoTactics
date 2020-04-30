@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using System.Collections.Generic;
 
 public class SkillBarUI : UIChildrenGenerator
 {
@@ -9,10 +7,14 @@ public class SkillBarUI : UIChildrenGenerator
 
     void Update()
     {
-        this.Paint<KeyValuePair<string, UnityAction>>(this.combatControls.Actions, (uI, action) => {
-            uI.GetComponentInChildren<Text>().text = action.Key;
+        if(this.combatControls.Actor == null) return;
+
+        this.Paint<Skill>(this.combatControls.Actor.Skills, (uI, skill) => {
+            uI.GetComponentInChildren<Text>().text = skill.Name;
             uI.GetComponent<Button>().onClick.RemoveAllListeners();
-            uI.GetComponent<Button>().onClick.AddListener(action.Value);
+            uI.GetComponent<Button>().onClick.AddListener(() => {
+                this.combatControls.ClickListener(skill);
+            });
         });
     }
 }

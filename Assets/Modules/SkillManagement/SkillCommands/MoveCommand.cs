@@ -27,6 +27,7 @@ public class MoveCommand : SkillCommand
             transform.position =  Vector3.MoveTowards(transform.position, nextTile.WorldPos, moveSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, nextTile.WorldPos) < this.treshold)
             {
+                input.Caster.Tile = nextTile;
                 bool result = this.MoveToNextTile();
                 return !result;
             }

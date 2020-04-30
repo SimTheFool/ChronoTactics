@@ -19,7 +19,7 @@ public class Test : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            TileFacade tile = DependencyLocator.getTilemapFacade().GetTileFromMousePos(mouseWorldPos);
+            TileFacade tile = DependencyLocator.getTilemapFacade().GetTileFromWorldPos(mouseWorldPos);
 
             if(tile != null)
             {

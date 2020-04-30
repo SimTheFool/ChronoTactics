@@ -2,6 +2,29 @@ using UnityEngine;
 
 public class TileFacade : IPositionnable
 {
+    private TilemapAgent agent;
+    public TilemapAgent Agent
+    {
+        get
+        {
+            return this.agent;
+        }
+        set
+        {
+            this.agent = value;
+        }
+    }
+
+    public Actor Actor
+    {
+        get
+        {
+            if(this.agent == null) return null;
+            return this.agent.Actor;
+        }
+    }
+
+
     private Vector2Int coord;
     public Vector2Int Coord
     {
