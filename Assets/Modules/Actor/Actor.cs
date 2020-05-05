@@ -1,8 +1,17 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-public class Actor: MonoBehaviour, ITilemapAgent
+public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
 {
+
+    private BehaviourStateMachine behaviourStateMachine = null;
+
+    void Awake() 
+    {
+        this.behaviourStateMachine = this.GetComponent<BehaviourStateMachine>();
+    }
+
+    // ITilemapAgent implementation.
     private TileFacade tile;
 
     public TileFacade GetTile()
@@ -15,7 +24,33 @@ public class Actor: MonoBehaviour, ITilemapAgent
         this.tile = tile;
         this.transform.position = tile.WorldPos;
         tile.Agent = this;
-    } 
+    }
+
+    //ITimelineAgent implementation
+    string ITimelineAgent.Name => this.actorName;
+
+    public int Atb
+    {
+        get => this.atb;
+        set => this.atb = value;
+    }
+
+    public int Speed => this.speed;
+    public int UniqId => this.GetInstanceID();
+
+    public void OnBeginPass()
+    {
+        this.behaviourStateMachine.SetStateActive();
+    }
+
+    public void OnEndPass()
+    {
+        this.behaviourStateMachine.SetStateNotActive();
+    }
+
+
+    // Other
+    private int atb = 0;
 
     [SerializeField]
     private Skill moveSkill = null;
@@ -108,11 +143,4 @@ public class Actor: MonoBehaviour, ITilemapAgent
 
     [SerializeField]
     private int speed = 100;
-    public int Speed
-    {
-        get
-        {
-            return this.speed;
-        }
-    }
 }

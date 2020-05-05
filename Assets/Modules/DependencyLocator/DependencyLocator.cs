@@ -6,12 +6,12 @@ public class DependencyLocator : MonoBehaviour
     private static DependencyLocator instance;
 
     [SerializeField]
-    private TimelineHandler timelineHandler = null;
+    private TimelineController timelineController = null;
 
     private Finder<TileFacade> pathfinder = null;
 
     [SerializeField]
-    private TilemapFacade tilemapFacade = null;
+    private TilemapManager tilemapManager = null;
 
     [SerializeField]
     private SkillQueueResolver skillQueueResolver = null;
@@ -34,24 +34,24 @@ public class DependencyLocator : MonoBehaviour
         }
     }
 
-    public static TimelineHandler getTimelineHandler()
+    public static TimelineController getTimelineController()
     {
-        return instance.timelineHandler;
+        return instance.timelineController;
     }
 
     public static Finder<TileFacade> getPathfinder()
     {
         if(instance.pathfinder == null)
         {
-            TilemapFacade tilemap = DependencyLocator.getTilemapFacade();
+            TilemapManager tilemap = DependencyLocator.getTilemapManager();
             instance.pathfinder = new Finder<TileFacade>(tilemap.TilesMap);
         }
         return instance.pathfinder;
     }
 
-    public static TilemapFacade getTilemapFacade()
+    public static TilemapManager getTilemapManager()
     {
-        return instance.tilemapFacade;
+        return instance.tilemapManager;
     }
 
     public static SkillQueueResolver GetSkillQueueResolver()

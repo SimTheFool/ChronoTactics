@@ -3,7 +3,7 @@ using UnityEngine.Tilemaps;
 using System.Collections.Generic;
 using System.Linq;
 
-public class TilemapFacade : MonoBehaviour
+public class TilemapManager : MonoBehaviour
 {
     private Dictionary<Vector2Int, TileFacade> tilesMap = new Dictionary<Vector2Int, TileFacade>();
     public Dictionary<Vector2Int, TileFacade> TilesMap => this.tilesMap;

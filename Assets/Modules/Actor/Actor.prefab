@@ -11,9 +11,8 @@ GameObject:
   - component: {fileID: 8843810800189083925}
   - component: {fileID: 8843810800189083926}
   - component: {fileID: 4229863678788539455}
-  - component: {fileID: 8843810800189083927}
-  - component: {fileID: -1371840950463528574}
   - component: {fileID: 3158154361242603187}
+  - component: {fileID: 3312033066583196850}
   m_Layer: 0
   m_Name: Actor
   m_TagString: Untagged
@@ -66,30 +65,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 604068065698eeb4aa3422d5a7520c03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &8843810800189083927
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8843810800189083924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 226550e5c9d4db14889719202b7f6a61, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &-1371840950463528574
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8843810800189083924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82f0bdc6b0f58d64e8bb827f2ef314e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &3158154361242603187
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -140,3 +115,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &3312033066583196850
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843810800189083924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fab08d4bd1768d6429948f2c805a1370, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSkill: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2, type: 2}
+  endTurnSkill: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340, type: 2}
+  otherSkills: []
+  health: 100
+  playable: 1
+  actorName: 
+  speed: 100

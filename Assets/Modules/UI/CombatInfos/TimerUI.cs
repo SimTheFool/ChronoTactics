@@ -4,17 +4,17 @@ using UnityEngine.UI;
 public class TimerUI : MonoBehaviour
 {
 
-    private TimelineHandler timelineHandler = null;
+    private TimelineController timelineController = null;
     private Text timerLabel = null;
 
     void Start()
     {
-        this.timelineHandler = DependencyLocator.getTimelineHandler();
+        this.timelineController = DependencyLocator.getTimelineController();
         this.timerLabel = this.GetComponent<Text>();
     }
 
     void Update()
     {
-        this.timerLabel.text = $"{this.timelineHandler.Timer.ToString("#.00")} sec";
+        this.timerLabel.text = $"{this.timelineController.Timer.ToString("#.00")} sec";
     }
 }

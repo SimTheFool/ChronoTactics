@@ -5,7 +5,7 @@ public class ActivePlayableState : IBehaviourState
     private Actor actor = null;
     private CombatControls combatControls = null;
     private SkillQueueResolver skillQueueResolver = null;
-    private TilemapFacade tilemapFacade = null;
+    private TilemapManager tilemapManager = null;
 
     private bool tempMappingFlag = false;
 
@@ -14,7 +14,7 @@ public class ActivePlayableState : IBehaviourState
         this.actor = actor;
         this.combatControls = DependencyLocator.GetCombatControls();
         this.skillQueueResolver = DependencyLocator.GetSkillQueueResolver();
-        this.tilemapFacade = DependencyLocator.getTilemapFacade();
+        this.tilemapManager = DependencyLocator.getTilemapManager();
     }
 
     public void BehaviourUpdate()
@@ -65,7 +65,7 @@ public class ActivePlayableState : IBehaviourState
     {
         if(this.actor.SelectedSkill == null) return;
 
-        TileFacade targetTile = this.tilemapFacade.GetTileFromWorldPos(pos);
+        TileFacade targetTile = this.tilemapManager.GetTileFromWorldPos(pos);
         if(targetTile == null) return;
 
         Actor caster = this.actor;

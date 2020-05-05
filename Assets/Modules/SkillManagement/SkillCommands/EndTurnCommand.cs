@@ -7,7 +7,7 @@ public class EndTurnCommand : SkillCommand
 
     public override bool Process(SkillInput input)
     {
-        DependencyLocator.getTimelineHandler().EndTurn();
+        DependencyLocator.getTimelineController().EndPass();
         return true;
     }
 }

@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 public class TimelineUI : UIChildrenGenerator
 {
-    private TimelineHandler timelineHandler;
+    private TimelineController timelineController;
 
     void Start()
     {
-        this.timelineHandler = DependencyLocator.getTimelineHandler();
+        this.timelineController = DependencyLocator.getTimelineController();
     }
 
     void Update()
     {
-        Dictionary<int, List<TimelineAgent>> agentsPerTurn = this.timelineHandler.RemainingAgentsPerTurn;
+        Dictionary<int, List<ITimelineAgent>> agentsPerTurn = this.timelineController.RemainingAgentsPerTurn;
 
-        this.Paint<KeyValuePair<int, List<TimelineAgent>>>(agentsPerTurn, (turnUI, kvp) => {
-            turnUI.GetComponent<TurnUI>().Paint<TimelineAgent>(kvp.Value, (agentUI, agent) => {
+        this.Paint<KeyValuePair<int, List<ITimelineAgent>>>(agentsPerTurn, (turnUI, kvp) => {
+            turnUI.GetComponent<TurnUI>().Paint<ITimelineAgent>(kvp.Value, (agentUI, agent) => {
                 agentUI.GetComponent<Text>().text = agent.Name;
             });
         });

@@ -4,30 +4,37 @@ using System.Collections.Generic;
 public class CombatGameState : IGameState
 {
     private Level levelData = null;
+    private GameStateMachine gameStateMachine = null;
+
+    private TilemapManager tilemapManager = null;
+    private TimelineController timelineController = null;
+
+    public CombatGameState(GameStateMachine gameStateMachine)
+    {
+        this.gameStateMachine = gameStateMachine;
+
+        this.tilemapManager = DependencyLocator.getTilemapManager();
+        this.timelineController = DependencyLocator.getTimelineController();
+    }
 
     public void In()
     {
         if(this.levelData == null) return;
 
-        // Instantiating agents, may be Spawner class resposability.
-        List<ITilemapAgent> agents = new List<ITilemapAgent>();
-        foreach(Actor actor in levelData.actors)
+        foreach(Actor actor in this.levelData.actors)
         {
             Actor newActor = GameObject.Instantiate(actor);
-            agents.Add(newActor);
         }
+        GameObject.Instantiate(levelData.map).transform.parent = this.tilemapManager.transform;
 
-        // Instantiating map, may be Spawner class resposability.
-        TilemapFacade tilemapFacade = DependencyLocator.getTilemapFacade();
-        GameObject.Instantiate(levelData.map).transform.parent = tilemapFacade.transform;
-
-        // Initializing TileFacade.
-        tilemapFacade.Init(agents);
+        this.tilemapManager.Init(new List<ITilemapAgent>(this.levelData.actors));
+        this.timelineController.Init(new List<ITimelineAgent>(this.levelData.actors));
     }
 
     public void Update()
     {
-        
+        bool combatEnded = this.timelineController.Process();
+        if(combatEnded) this.gameStateMachine.SetMenuState();
     }
 
     public void Out()

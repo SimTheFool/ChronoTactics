@@ -1,5 +1,4 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class GameStateMachine : MonoBehaviour
 {
@@ -7,23 +6,33 @@ public class GameStateMachine : MonoBehaviour
     private Level level;
 
     private CombatGameState combatState = null;
+    private MenuGameState menuState = null;
     private IGameState state = null;
 
 
     private void Awake()
     {
-        this.combatState = new CombatGameState();
-        this.combatState.SetLevelData(level);
+        this.combatState = new CombatGameState(this);
+        this.menuState = new MenuGameState(this);
 
-
-        this.SetState(this.combatState);
+        this.SetCombatState();
     }
-
 
     private void SetState(IGameState state)
     {
         this.state?.Out();
         this.state = state;
         this.state.In();
+    }
+
+    public void SetCombatState()
+    {
+        this.combatState.SetLevelData(this.level);
+        this.SetState(this.combatState);
+    }
+
+    public void SetMenuState()
+    {
+        this.SetState(this.menuState);
     }
 }
