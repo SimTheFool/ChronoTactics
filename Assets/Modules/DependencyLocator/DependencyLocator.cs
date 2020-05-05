@@ -44,7 +44,7 @@ public class DependencyLocator : MonoBehaviour
         if(instance.pathfinder == null)
         {
             TilemapFacade tilemap = DependencyLocator.getTilemapFacade();
-            instance.pathfinder = new Finder<TileFacade>(tilemap.tilesMap);
+            instance.pathfinder = new Finder<TileFacade>(tilemap.TilesMap);
         }
         return instance.pathfinder;
     }

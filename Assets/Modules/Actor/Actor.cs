@@ -1,10 +1,22 @@
 using UnityEngine;
-using UnityEngine.Events;
 using System.Collections.Generic;
-using System.Linq;
 
-public class Actor: MonoBehaviour
+public class Actor: MonoBehaviour, ITilemapAgent
 {
+    private TileFacade tile;
+
+    public TileFacade GetTile()
+    {
+        return this.tile;
+    }
+
+    public void SetTile(TileFacade tile)
+    {
+        this.tile = tile;
+        this.transform.position = tile.WorldPos;
+        tile.Agent = this;
+    } 
+
     [SerializeField]
     private Skill moveSkill = null;
     public Skill MoveSkill
@@ -59,20 +71,6 @@ public class Actor: MonoBehaviour
         }
     }
 
-    private TilemapAgent tilemapAgent;
-
-    public TileFacade Tile
-    {
-        get
-        {
-            return this.tilemapAgent.GetTile();
-        }
-        set
-        {
-            this.tilemapAgent.SetTile(value);
-        }
-    }
-
     [SerializeField]
     private int health = 100;
     public int Health
@@ -116,15 +114,5 @@ public class Actor: MonoBehaviour
         {
             return this.speed;
         }
-    }
-
-    void Start()
-    {
-        this.tilemapAgent = this.GetComponent<TilemapAgent>();
-    }
-
-    public override string ToString()
-    {
-        return this.actorName;
     }
 }

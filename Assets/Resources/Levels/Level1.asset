@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 993b9febc4636f245a57b85f1b9482c2, type: 3}
   m_Name: Level1
   m_EditorClassIdentifier: 
-  map: {fileID: 7605157593798065687, guid: 56327c6630444eb4d954774849c3a908, type: 3}
+  map: {fileID: 0}
   actors:
-  - {fileID: 2677092866929157329, guid: aea278c8aad369448994dba8c90aa841, type: 3}
-  - {fileID: 4276527804659407581, guid: 672dcd9bcbbd7d949951801a99bf381d, type: 3}
-  - {fileID: 9214640143477264711, guid: 8f5f12b4e4400c94eafcf2b7d0b52cc1, type: 3}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}

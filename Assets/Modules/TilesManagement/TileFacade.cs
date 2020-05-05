@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class TileFacade : IPositionnable
 {
-    private TilemapAgent agent;
-    public TilemapAgent Agent
+    private ITilemapAgent agent;
+    public ITilemapAgent Agent
     {
         get
         {
@@ -12,15 +12,6 @@ public class TileFacade : IPositionnable
         set
         {
             this.agent = value;
-        }
-    }
-
-    public Actor Actor
-    {
-        get
-        {
-            if(this.agent == null) return null;
-            return this.agent.Actor;
         }
     }
 
@@ -52,20 +43,20 @@ public class TileFacade : IPositionnable
         }
     }
 
-    private SpecialTile specialTile;
-    public SpecialTile SpecialTile
+    private StartTile startTile;
+    public StartTile StartTile
     {
         get
         {
-            return this.specialTile;
+            return this.startTile;
         }
     }
 
-    public TileFacade(Vector2Int coord, Vector3 worldPos, GroundTile groundTile, SpecialTile specialTile = null)
+    public TileFacade(Vector2Int coord, Vector3 worldPos, GroundTile groundTile, StartTile startTile = null)
     {
         this.coord = coord;
         this.worldPos = worldPos;
         this.groundTile = groundTile;
-        this.specialTile = specialTile;
+        this.startTile = startTile;
     }
 }

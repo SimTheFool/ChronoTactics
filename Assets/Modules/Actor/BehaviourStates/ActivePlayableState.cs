@@ -69,7 +69,7 @@ public class ActivePlayableState : IBehaviourState
         if(targetTile == null) return;
 
         Actor caster = this.actor;
-        Actor targetActor = targetTile.Actor;
+        Actor targetActor = (Actor)targetTile.Agent;
         SkillInput input = new SkillInput(caster, targetTile, targetActor);
 
         this.skillQueueResolver.AddSkill(input, this.actor.SelectedSkill);

@@ -14,7 +14,7 @@ public class MoveCommand : SkillCommand
 
     public override void Init(SkillInput input)
     {
-        HashSet<TileFacade> tilesPath = DependencyLocator.getPathfinder().findPath(input.Caster.Tile, input.TargetTile, this.topology, this.filter);
+        HashSet<TileFacade> tilesPath = DependencyLocator.getPathfinder().findPath(input.Caster.GetTile(), input.TargetTile, this.topology, this.filter);
         this.tilesPath = new Queue<TileFacade>(tilesPath);
         this.MoveToNextTile();
     }
@@ -27,7 +27,7 @@ public class MoveCommand : SkillCommand
             transform.position =  Vector3.MoveTowards(transform.position, nextTile.WorldPos, moveSpeed * Time.deltaTime);
             if (Vector3.Distance(transform.position, nextTile.WorldPos) < this.treshold)
             {
-                input.Caster.Tile = nextTile;
+                input.Caster.SetTile(nextTile);
                 bool result = this.MoveToNextTile();
                 return !result;
             }
