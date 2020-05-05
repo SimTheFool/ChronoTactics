@@ -7,13 +7,20 @@ public class DependencyLocator : MonoBehaviour
 
     [SerializeField]
     private TimelineHandler timelineHandler = null;
+
     private Finder<TileFacade> pathfinder = null;
+
     [SerializeField]
     private TilemapFacade tilemapFacade = null;
-    [SerializeField]
-    private CombatControls combatControls = null;
+
     [SerializeField]
     private SkillQueueResolver skillQueueResolver = null;
+
+    private ControlsMapper controlsMapper = null;
+
+    [SerializeField]
+    private CombatControls combatControls = null;
+
 
     private void Awake()
     {
@@ -47,13 +54,23 @@ public class DependencyLocator : MonoBehaviour
         return instance.tilemapFacade;
     }
 
-    public static CombatControls GetCombatControls()
-    {
-        return instance.combatControls;
-    }
-
     public static SkillQueueResolver GetSkillQueueResolver()
     {
         return instance.skillQueueResolver;
+    }
+
+    public static ControlsMapper GetControlsMapper()
+    {
+        if(instance.controlsMapper == null)
+        {
+            instance.controlsMapper = new ControlsMapper();
+        }
+
+        return instance.controlsMapper;
+    }
+
+    public static CombatControls GetCombatControls()
+    {
+        return instance.combatControls;
     }
 }

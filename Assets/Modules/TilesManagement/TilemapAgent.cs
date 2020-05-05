@@ -26,6 +26,7 @@ public class TilemapAgent : MonoBehaviour
     public void SetTile(TileFacade tile)
     {
         this.tile = tile;
+        this.transform.position = tile.WorldPos;
         tile.Agent = this;
     }
 }

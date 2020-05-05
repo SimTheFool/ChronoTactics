@@ -1,0 +1,79 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "Default",
+            "id": "ff2f0c2f-6e48-4767-9004-92bddfbbe00d",
+            "actions": [
+                {
+                    "name": "SelectSkill",
+                    "type": "Button",
+                    "id": "df85fcd5-911e-44d3-9d1a-dacc163ab04b",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "f8477182-f638-45ac-b2b1-3080dc20f407",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "SkillSelected",
+            "id": "b026dee7-a018-44b5-90d2-a8ad6a4c4570",
+            "actions": [
+                {
+                    "name": "ResolveSkill",
+                    "type": "Button",
+                    "id": "e9449a80-63c8-466b-adea-c1a2942cb3f9",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "CancelSkill",
+                    "type": "Button",
+                    "id": "cf418325-301b-4599-8132-44ba4467d4b8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e365a54d-4009-4cf5-840b-873531cf58b9",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ResolveSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d99da081-d0cc-4499-bb97-93c741d24cd7",
+                    "path": "<Keyboard>/backspace",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "CancelSkill",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
