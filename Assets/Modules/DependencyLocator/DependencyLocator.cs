@@ -19,6 +19,9 @@ public class DependencyLocator : MonoBehaviour
     [SerializeField]
     private SkillQueueResolver skillQueueResolver = null;
 
+    [SerializeField]
+    private Spawner spawner = null;
+
     private Dictionary<Type, IInputActionCollection> actionsMapper = new Dictionary<Type, IInputActionCollection>();
 
 
@@ -71,23 +74,17 @@ public class DependencyLocator : MonoBehaviour
         return (TMapperType)mapper;
     }
 
+    public static Spawner GetSpawner()
+    {
+        return instance.spawner;
+    }
+
 
     [SerializeField]
     private CombatControlsUI combatControlsUI = null;
-
-    [SerializeField]
-    private Camera mainCamera = null;
-
-
 
     public static CombatControlsUI GetCombatControls()
     {
         return instance.combatControlsUI;
     }
-
-    public static Camera GetMainCamera()
-    {
-        return instance.mainCamera;
-    }
-
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 public class GameStateMachine : MonoBehaviour
 {
     [SerializeField]
-    private Level level;
+    private Level level = null;
 
     private CombatGameState combatState = null;
     private MenuGameState menuState = null;
@@ -20,14 +20,14 @@ public class GameStateMachine : MonoBehaviour
 
     void Update()
     {
-        this.state.Process();
+        this.state?.Process();
     }
 
     private void SetState(IGameState state)
     {
         this.state?.Out();
         this.state = state;
-        this.state.In();
+        this.state?.In();
     }
 
     public void SetCombatState()

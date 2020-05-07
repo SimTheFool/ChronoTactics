@@ -4,22 +4,23 @@ using UnityEngine.InputSystem;
 public class ActivePlayableState : IBehaviourState
 {
     private Actor actor = null;
+    private ActorSkills skills = null;
 
     private CombatControlsUI combatControlsUI = null;
     private CombatActionsMapping combatActionsMapping = null;
 
     private SkillQueueResolver skillQueueResolver = null;
     private TilemapManager tilemapManager = null;
-    private Camera mainCamera = null;
 
     public ActivePlayableState(Actor actor)
     {
         this.actor = actor;
+        this.skills = actor.Skills;
+
         this.combatControlsUI = DependencyLocator.GetCombatControls();
         this.combatActionsMapping = DependencyLocator.GetActionsMapper<CombatActionsMapping>();
         this.skillQueueResolver = DependencyLocator.GetSkillQueueResolver();
         this.tilemapManager = DependencyLocator.getTilemapManager();
-        this.mainCamera = DependencyLocator.GetMainCamera();
     }
 
     public void In()
@@ -43,17 +44,17 @@ public class ActivePlayableState : IBehaviourState
 
     private void SelectSkill(Skill skill)
     {
-        this.actor.SelectedSkill = skill;
+        this.skills.Selected = skill;
     }
 
     private void CancelSkill()
     {
-        this.actor.SelectedSkill = null;
+        this.skills.Selected = null;
     }
 
     private void ResolveSkill(Vector3 pos)
     {
-        if(this.actor.SelectedSkill == null) return;
+        if(this.skills.Selected == null) return;
 
         TileFacade targetTile = this.tilemapManager.GetTileFromWorldPos(pos);
         if(targetTile == null) return;
@@ -62,7 +63,7 @@ public class ActivePlayableState : IBehaviourState
         Actor targetActor = (Actor)targetTile.Agent;
         SkillInput input = new SkillInput(caster, targetTile, targetActor);
 
-        this.skillQueueResolver.AddSkill(input, this.actor.SelectedSkill);
+        this.skillQueueResolver.AddSkill(input, this.skills.Selected);
 
         this.CancelSkill();
     }
@@ -81,7 +82,7 @@ public class ActivePlayableState : IBehaviourState
 
     private void SkillUIClickListener(Skill skill)
     {
-        if(skill != this.actor.SelectedSkill)
+        if(skill != this.skills.Selected)
         {
             this.SelectSkill(skill);
             this.SwitchToSkillSelectedMapping();
@@ -95,7 +96,7 @@ public class ActivePlayableState : IBehaviourState
     private void ResolveSkillListener(InputAction.CallbackContext ctx)
     {
         Vector3 pos = Input.mousePosition;
-        pos = this.mainCamera.ScreenToWorldPoint((Vector3)pos);
+        pos = MainCamera.Instance.ScreenToWorldPoint((Vector3)pos);
         this.ResolveSkill(pos);
     }
 

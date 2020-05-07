@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1505169732221495779, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: speed
+      value: 150
+      objectReference: {fileID: 0}
     - target: {fileID: 3312033066583196850, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: actorName

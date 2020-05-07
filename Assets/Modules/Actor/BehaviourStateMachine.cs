@@ -1,6 +1,5 @@
 using UnityEngine;
 
-[RequireComponent(typeof(Actor))]
 public class BehaviourStateMachine : MonoBehaviour
 {
     private Actor actor = null;
@@ -22,11 +21,6 @@ public class BehaviourStateMachine : MonoBehaviour
         this.SetStateNotActive();
     }
 
-    /* void Update()
-    {
-        this.currentState.BehaviourUpdate();
-    } */
-
     private void SetState(IBehaviourState state)
     {
         if(this.currentState != null) this.currentState.Out();
@@ -39,14 +33,14 @@ public class BehaviourStateMachine : MonoBehaviour
         this.SetState(this.notActive);
     }
 
-    public void SetStateActive()
+    public void SetStateActivePlayable()
     {
-        if(this.actor.Playable)
-        {
-            this.SetState(this.activePlayable);
-            return;
-        }
 
+        this.SetState(this.activePlayable);
+    }
+
+    public void SetStateActiveAI()
+    {
         this.SetState(this.activeAI);
     }
 }

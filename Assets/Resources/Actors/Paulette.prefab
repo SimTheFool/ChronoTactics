@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1505169732221495779, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: speed
+      value: 75
+      objectReference: {fileID: 0}
     - target: {fileID: 3312033066583196850, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: actorName
@@ -84,5 +89,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340,
         type: 2}
+    - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: actorName
+      value: Paulette
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1dcc250b6cc000f40a9378f43ae795d3, type: 3}

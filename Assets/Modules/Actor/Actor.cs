@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.Collections.Generic;
 
+[RequireComponent(typeof(BehaviourStateMachine), typeof(ActorStats), typeof(ActorSkills))]
 public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
 {
     [SerializeField]
@@ -12,12 +12,18 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
     public string Name => this.actorName;
 
     private BehaviourStateMachine behaviourStateMachine = null;
+
     private ActorStats stats = null;
+    public ActorStats Stats => this.stats;
+
+    private ActorSkills skills = null;
+    public ActorSkills Skills => this.skills;
 
     void Awake() 
     {
         this.behaviourStateMachine = this.GetComponent<BehaviourStateMachine>();
         this.stats = this.GetComponent<ActorStats>();
+        this.skills = this.GetComponent<ActorSkills>();
     }
 
     // ITilemapAgent implementation.
@@ -40,98 +46,26 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
 
     public int Atb
     {
-        get => this.atb;
-        set => this.atb = value;
+        get => this.Stats.Atb;
+        set => this.Stats.Atb = value;
     }
 
-    public int Speed => this.speed;
+    public int Speed => this.Stats.Speed;
     public int UniqId => this.GetInstanceID();
 
     public void OnBeginPass()
     {
-        this.behaviourStateMachine.SetStateActive();
+        if(this.playable)
+        {
+            this.behaviourStateMachine.SetStateActivePlayable();
+            return;
+        }
+
+        this.behaviourStateMachine.SetStateActiveAI();        
     }
 
     public void OnEndPass()
     {
         this.behaviourStateMachine.SetStateNotActive();
     }
-
-
-    // Other
-    [SerializeField]
-    private Skill moveSkill = null;
-    public Skill MoveSkill
-    {
-        get
-        {
-            return this.moveSkill;
-        }
-    }
-
-    [SerializeField]
-    private Skill endTurnSkill = null;
-    public Skill EndTurnSkill
-    {
-        get
-        {
-            return this.endTurnSkill;
-        }
-    }
-
-    [SerializeField]
-    private List<Skill> otherSkills = null;
-    public List<Skill> OtherSkills
-    {
-        get
-        {
-            return this.otherSkills;
-        }
-    }
-
-    public List<Skill> Skills
-    {
-        get
-        {
-            List<Skill> skills = new List<Skill>(this.otherSkills);
-            skills.Add(this.moveSkill);
-            skills.Add(this.endTurnSkill);
-            return skills;
-        }
-    }
-
-    private Skill selectedSkill = null;
-    public Skill SelectedSkill
-    {
-        get
-        {
-            return this.selectedSkill;
-        }
-        set
-        {
-            this.selectedSkill = value;
-        }
-    }
-
-
-    [SerializeField]
-    private int health = 100;
-    public int Health
-    {
-        get
-        {
-            return this.health;
-        }
-
-        set
-        {
-            this.health = value;
-        }
-    }
-
-    [SerializeField]
-    private int atb = 0;
-
-    [SerializeField]
-    private int speed = 100;
 }

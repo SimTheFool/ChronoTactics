@@ -7,7 +7,7 @@ public class ReceiveDamageCommand : SkillCommand
 
     public override bool Process(SkillInput input)
     {
-        input.Caster.Health -= 10;
+        input.Caster.Stats.Health -= 10;
         return true;
     }
 }

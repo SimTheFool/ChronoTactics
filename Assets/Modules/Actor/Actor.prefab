@@ -9,10 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8843810800189083925}
-  - component: {fileID: 8843810800189083926}
-  - component: {fileID: 4229863678788539455}
   - component: {fileID: 3158154361242603187}
-  - component: {fileID: 3312033066583196850}
+  - component: {fileID: 8843810800189083926}
+  - component: {fileID: 5620074782024390275}
+  - component: {fileID: 1505169732221495779}
+  - component: {fileID: 4229863678788539455}
   m_Layer: 0
   m_Name: Actor
   m_TagString: Untagged
@@ -34,37 +35,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8843810800189083926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8843810800189083924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fab08d4bd1768d6429948f2c805a1370, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSkill: {fileID: 0}
-  endTurnSkill: {fileID: 0}
-  otherSkills: []
-  health: 100
-  playable: 1
-  actorName: Paulette
-  speed: 75
---- !u!114 &4229863678788539455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8843810800189083924}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 604068065698eeb4aa3422d5a7520c03, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!212 &3158154361242603187
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -115,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &3312033066583196850
+--- !u!114 &8843810800189083926
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -127,10 +97,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fab08d4bd1768d6429948f2c805a1370, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSkill: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2, type: 2}
-  endTurnSkill: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340, type: 2}
-  otherSkills: []
-  health: 100
   playable: 1
-  actorName: 
+  actorName: Anonyme
+--- !u!114 &5620074782024390275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843810800189083924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ce916f7c32138f46ba3e65ee7d5ac3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  move: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2, type: 2}
+  endTurn: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340, type: 2}
+  others: []
+--- !u!114 &1505169732221495779
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843810800189083924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f6debc1de5653a14eadabe454ab315d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  health: 100
+  atb: 0
   speed: 100
+--- !u!114 &4229863678788539455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843810800189083924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 604068065698eeb4aa3422d5a7520c03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

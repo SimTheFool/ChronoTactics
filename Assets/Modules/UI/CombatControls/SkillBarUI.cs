@@ -9,7 +9,7 @@ public class SkillBarUI : UIChildrenGenerator
     {
         if(this.combatControlsUI.Actor == null) return;
 
-        this.Paint<Skill>(this.combatControlsUI.Actor.Skills, (uI, skill) => {
+        this.Paint<Skill>(this.combatControlsUI.Actor.Skills.Skills, (uI, skill) => {
             uI.GetComponentInChildren<Text>().text = skill.Name;
             uI.GetComponent<Button>().onClick.RemoveAllListeners();
             uI.GetComponent<Button>().onClick.AddListener(() => {

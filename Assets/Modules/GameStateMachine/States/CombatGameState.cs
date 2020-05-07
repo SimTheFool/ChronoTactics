@@ -10,6 +10,7 @@ public class CombatGameState : IGameState
     private TimelineController timelineController = null;
     private SkillQueueResolver skillQueueResolver = null;
     private CombatActionsMapping combatActionsMapping = null;
+    private Spawner spawner = null;
 
     public CombatGameState(GameStateMachine gameStateMachine)
     {
@@ -19,6 +20,7 @@ public class CombatGameState : IGameState
         this.timelineController = DependencyLocator.getTimelineController();
         this.skillQueueResolver = DependencyLocator.GetSkillQueueResolver();
         this.combatActionsMapping = DependencyLocator.GetActionsMapper<CombatActionsMapping>();
+        this.spawner = DependencyLocator.GetSpawner();
     }
 
     public void In()
@@ -28,13 +30,14 @@ public class CombatGameState : IGameState
         List<Actor> newActors = new List<Actor>();
         foreach(Actor actor in this.levelData.actors)
         {
-            Actor newActor = GameObject.Instantiate(actor);
+            Actor newActor = this.spawner.Spawn(actor);
             newActors.Add(newActor);
         }
-        GameObject.Instantiate(levelData.map).transform.parent = this.tilemapManager.transform;
+        this.spawner.Spawn(levelData.map);
 
         this.tilemapManager.Init(new List<ITilemapAgent>(newActors));
         this.timelineController.Init(new List<ITimelineAgent>(newActors));
+        
         this.combatActionsMapping.Enable();
     }
 
