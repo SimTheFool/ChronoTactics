@@ -6,6 +6,7 @@ public class BehaviourStateMachine : MonoBehaviour
     private Actor actor = null;
 
     private IBehaviourState currentState = null;
+
     private IBehaviourState notActive = null;
     private IBehaviourState activePlayable = null;
     private IBehaviourState activeAI = null;
@@ -21,9 +22,16 @@ public class BehaviourStateMachine : MonoBehaviour
         this.SetStateNotActive();
     }
 
-    void Update()
+    /* void Update()
     {
         this.currentState.BehaviourUpdate();
+    } */
+
+    private void SetState(IBehaviourState state)
+    {
+        if(this.currentState != null) this.currentState.Out();
+        this.currentState = state;
+        this.currentState.In();
     }
 
     public void SetStateNotActive()
@@ -40,12 +48,5 @@ public class BehaviourStateMachine : MonoBehaviour
         }
 
         this.SetState(this.activeAI);
-    }
-
-    private void SetState(IBehaviourState state)
-    {
-        if(this.currentState != null) this.currentState.Out();
-        this.currentState = state;
-        this.currentState.In();
     }
 }

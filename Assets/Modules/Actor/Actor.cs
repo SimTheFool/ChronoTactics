@@ -3,12 +3,21 @@ using System.Collections.Generic;
 
 public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
 {
+    [SerializeField]
+    private bool playable = true;
+    public bool Playable => this.playable;
+
+    [SerializeField]
+    private string actorName = "";
+    public string Name => this.actorName;
 
     private BehaviourStateMachine behaviourStateMachine = null;
+    private ActorStats stats = null;
 
     void Awake() 
     {
         this.behaviourStateMachine = this.GetComponent<BehaviourStateMachine>();
+        this.stats = this.GetComponent<ActorStats>();
     }
 
     // ITilemapAgent implementation.
@@ -50,8 +59,6 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
 
 
     // Other
-    private int atb = 0;
-
     [SerializeField]
     private Skill moveSkill = null;
     public Skill MoveSkill
@@ -106,6 +113,7 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
         }
     }
 
+
     [SerializeField]
     private int health = 100;
     public int Health
@@ -122,24 +130,7 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
     }
 
     [SerializeField]
-    private bool playable = true;
-    public bool Playable
-    {
-        get
-        {
-            return this.playable;
-        }
-    }
-
-    [SerializeField]
-    private string actorName = "";
-    public string Name
-    {
-        get
-        {
-            return this.actorName;
-        }
-    }
+    private int atb = 0;
 
     [SerializeField]
     private int speed = 100;

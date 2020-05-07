@@ -1,35 +1,14 @@
 {
-    "name": "Controls",
+    "name": "CombatActionsMapping",
     "maps": [
         {
-            "name": "Default",
+            "name": "SkillNotSelectedMapping",
             "id": "ff2f0c2f-6e48-4767-9004-92bddfbbe00d",
-            "actions": [
-                {
-                    "name": "SelectSkill",
-                    "type": "Button",
-                    "id": "df85fcd5-911e-44d3-9d1a-dacc163ab04b",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": ""
-                }
-            ],
-            "bindings": [
-                {
-                    "name": "",
-                    "id": "f8477182-f638-45ac-b2b1-3080dc20f407",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "SelectSkill",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                }
-            ]
+            "actions": [],
+            "bindings": []
         },
         {
-            "name": "SkillSelected",
+            "name": "SkillSelectedMapping",
             "id": "b026dee7-a018-44b5-90d2-a8ad6a4c4570",
             "actions": [
                 {
@@ -53,8 +32,8 @@
                 {
                     "name": "",
                     "id": "e365a54d-4009-4cf5-840b-873531cf58b9",
-                    "path": "<Keyboard>/space",
-                    "interactions": "",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "Tap(duration=0.5)",
                     "processors": "",
                     "groups": "",
                     "action": "ResolveSkill",

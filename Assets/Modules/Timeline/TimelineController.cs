@@ -59,20 +59,16 @@ public class TimelineController : MonoBehaviour
             Turn nextTurn = this.currentTurn.MoveToNextTurn();
 
             // If there no next turn, we end combat.
-            if(nextTurn == null)
-            {
-                return true;
-            }
+            if(nextTurn == null) return true;
 
             // If there is, we get next agent of that turn.
             this.currentTurn = nextTurn;
             nextAgent = this.currentTurn.MoveToNextAgent();
-            return false;
         }
 
         this.currentAgent?.OnEndPass();
         this.currentAgent = nextAgent;
-        this.currentAgent.OnBeginPass();
+        this.currentAgent?.OnBeginPass();
 
         this.timer = this.secondsPerAgent;
 

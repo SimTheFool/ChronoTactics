@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Events;
 
-public class CombatControls : MonoBehaviour
+public class CombatControlsUI : MonoBehaviour
 {
     private Actor actor;
     public Actor Actor

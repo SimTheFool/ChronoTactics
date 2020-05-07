@@ -12,7 +12,7 @@ public class SkillQueueResolver : MonoBehaviour
         this.skills.Enqueue(new KeyValuePair<SkillInput, Skill>(input, skill));
     }
 
-    void Update()
+    public void Process()
     {
         bool done = true;
 

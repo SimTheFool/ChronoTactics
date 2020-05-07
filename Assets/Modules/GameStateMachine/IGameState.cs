@@ -1,6 +1,6 @@
 public interface IGameState
 {
     void In();
-    void Update();
+    void Process();
     void Out();
 }

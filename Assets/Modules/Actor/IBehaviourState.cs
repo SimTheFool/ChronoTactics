@@ -1,6 +1,6 @@
 public interface IBehaviourState
 {
-    void BehaviourUpdate();
+    //void BehaviourUpdate();
 
     void In();
 

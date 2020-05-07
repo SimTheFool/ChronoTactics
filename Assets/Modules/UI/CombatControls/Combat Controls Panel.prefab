@@ -114,7 +114,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uIPrefab: {fileID: 1129707322536343005, guid: b9aaf2539b50bfc468e54ac93765832d,
     type: 3}
-  combatControls: {fileID: 688533046416985859}
+  combatControlsUI: {fileID: 5474661479500253539}
 --- !u!1 &8880450297435072065
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 7934847472890868092}
   - component: {fileID: 9090533795567903480}
   - component: {fileID: 6408081764070855961}
-  - component: {fileID: 688533046416985859}
+  - component: {fileID: 5474661479500253539}
   m_Layer: 5
   m_Name: Combat Controls Panel
   m_TagString: Untagged
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &688533046416985859
+--- !u!114 &5474661479500253539
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -199,6 +199,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 8880450297435072065}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d200c1a554bc824e9635b17bab78233, type: 3}
+  m_Script: {fileID: 11500000, guid: b7a84b294348ce248af11fd7895222a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

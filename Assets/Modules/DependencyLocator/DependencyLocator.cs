@@ -1,4 +1,7 @@
 ﻿using UnityEngine;
+using UnityEngine.InputSystem;
+using System.Collections.Generic;
+using System;
 
 public class DependencyLocator : MonoBehaviour
 {
@@ -16,10 +19,7 @@ public class DependencyLocator : MonoBehaviour
     [SerializeField]
     private SkillQueueResolver skillQueueResolver = null;
 
-    private ControlsMapper controlsMapper = null;
-
-    [SerializeField]
-    private CombatControls combatControls = null;
+    private Dictionary<Type, IInputActionCollection> actionsMapper = new Dictionary<Type, IInputActionCollection>();
 
 
     private void Awake()
@@ -59,18 +59,35 @@ public class DependencyLocator : MonoBehaviour
         return instance.skillQueueResolver;
     }
 
-    public static ControlsMapper GetControlsMapper()
+    public static TMapperType GetActionsMapper<TMapperType>() where TMapperType : IInputActionCollection
     {
-        if(instance.controlsMapper == null)
+        IInputActionCollection mapper = null;
+        if(!instance.actionsMapper.TryGetValue(typeof(TMapperType), out mapper))
         {
-            instance.controlsMapper = new ControlsMapper();
+            mapper = (IInputActionCollection)Activator.CreateInstance(typeof(TMapperType));
+            instance.actionsMapper.Add(typeof(TMapperType), mapper);
         }
 
-        return instance.controlsMapper;
+        return (TMapperType)mapper;
     }
 
-    public static CombatControls GetCombatControls()
+
+    [SerializeField]
+    private CombatControlsUI combatControlsUI = null;
+
+    [SerializeField]
+    private Camera mainCamera = null;
+
+
+
+    public static CombatControlsUI GetCombatControls()
     {
-        return instance.combatControls;
+        return instance.combatControlsUI;
     }
+
+    public static Camera GetMainCamera()
+    {
+        return instance.mainCamera;
+    }
+
 }

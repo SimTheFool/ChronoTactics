@@ -10,12 +10,17 @@ public class GameStateMachine : MonoBehaviour
     private IGameState state = null;
 
 
-    private void Awake()
+    void Awake()
     {
         this.combatState = new CombatGameState(this);
         this.menuState = new MenuGameState(this);
 
         this.SetCombatState();
+    }
+
+    void Update()
+    {
+        this.state.Process();
     }
 
     private void SetState(IGameState state)

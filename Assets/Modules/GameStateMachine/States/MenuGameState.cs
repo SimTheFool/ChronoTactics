@@ -12,7 +12,7 @@ public class MenuGameState : IGameState
 
     }
 
-    public void Update()
+    public void Process()
     {
 
     }
