@@ -19,6 +19,9 @@ public class Actor: MonoBehaviour, ITilemapAgent, ITimelineAgent
     private ActorSkills skills = null;
     public ActorSkills Skills => this.skills;
 
+    private ActorEvents events = null;
+    public ActorEvents Events => this.events;
+
     void Awake() 
     {
         this.behaviourStateMachine = this.GetComponent<BehaviourStateMachine>();

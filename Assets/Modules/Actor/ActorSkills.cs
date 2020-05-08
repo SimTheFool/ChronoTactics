@@ -3,7 +3,18 @@ using System.Collections.Generic;
 
 public class ActorSkills : MonoBehaviour
 {
-    public List<Skill> Skills
+    private Actor actor = null;
+    private Actor Actor
+    {
+        get
+        {
+            if(this.actor == null)
+                this.actor.GetComponent<Actor>();
+            return this.actor;
+        }
+    }
+
+    public List<Skill> All
     {
         get
         {

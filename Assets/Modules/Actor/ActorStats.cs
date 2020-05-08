@@ -2,6 +2,17 @@ using UnityEngine;
 
 public class ActorStats : MonoBehaviour
 {
+    private Actor actor = null;
+    private Actor Actor
+    {
+        get
+        {
+            if(this.actor == null)
+                this.actor.GetComponent<Actor>();
+            return this.actor;
+        }
+    }
+
     [SerializeField]
     private int maxHealth = 100;
     public int MaxHealth => this.maxHealth;
