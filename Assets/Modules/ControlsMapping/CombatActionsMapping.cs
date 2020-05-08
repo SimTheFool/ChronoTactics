@@ -1,4 +1,4 @@
-// GENERATED AUTOMATICALLY FROM 'Assets/Modules/ControlsMapper/CombatActionsMapping.inputactions'
+// GENERATED AUTOMATICALLY FROM 'Assets/Modules/ControlsMapping/CombatActionsMapping.inputactions'
 
 using System;
 using System.Collections;
