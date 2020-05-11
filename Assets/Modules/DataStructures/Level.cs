@@ -5,5 +5,5 @@ using System.Collections.Generic;
 public class Level : ScriptableObject
 {
     public TilemapIdentifier map;
-    public List<Actor> actors;
+    public List<ActorFacade> actors;
 }

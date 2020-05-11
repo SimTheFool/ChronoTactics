@@ -3,21 +3,17 @@ using UnityEngine.InputSystem;
 
 public class ActivePlayableState : IBehaviourState
 {
-    private Actor actor = null;
-    private ActorSkills skills = null;
+    private ActorFacade actor = null;
 
-    private CombatControlsUI combatControlsUI = null;
     private CombatActionsMapping combatActionsMapping = null;
 
     private SkillQueueResolver skillQueueResolver = null;
     private TilemapManager tilemapManager = null;
 
-    public ActivePlayableState(Actor actor)
+    public ActivePlayableState(ActorFacade actor)
     {
         this.actor = actor;
-        this.skills = actor.Skills;
 
-        this.combatControlsUI = DependencyLocator.GetCombatControls();
         this.combatActionsMapping = DependencyLocator.GetActionsMapper<CombatActionsMapping>();
         this.skillQueueResolver = DependencyLocator.GetSkillQueueResolver();
         this.tilemapManager = DependencyLocator.getTilemapManager();
@@ -25,45 +21,43 @@ public class ActivePlayableState : IBehaviourState
 
     public void In()
     {
-        this.combatControlsUI.Enable();
-        this.combatControlsUI.SetActor(this.actor);
-        this.combatControlsUI.SetClickListener(this.SkillUIClickListener);
+        ActorEvents.OnPlayableStateEnabled(this.actor, this.SkillUIClickListener);
 
         this.SwitchToSkillNotSelectedMapping();
-
         this.combatActionsMapping.SkillSelectedMapping.ResolveSkill.performed += this.ResolveSkillListener;
         this.combatActionsMapping.SkillSelectedMapping.CancelSkill.performed += this.CancelSkillListener;
     }
 
     public void Out()
     {
-        this.combatControlsUI.Disable();
+        ActorEvents.OnPlayableStateDisabled(this.actor);
+
         this.combatActionsMapping.SkillSelectedMapping.ResolveSkill.performed -= this.ResolveSkillListener;
         this.combatActionsMapping.SkillSelectedMapping.CancelSkill.performed -= this.CancelSkillListener;
     }
 
     private void SelectSkill(Skill skill)
     {
-        this.skills.Selected = skill;
+        this.actor.Skills.Selected = skill;
     }
 
     private void CancelSkill()
     {
-        this.skills.Selected = null;
+        this.actor.Skills.Selected = null;
     }
 
     private void ResolveSkill(Vector3 pos)
     {
-        if(this.skills.Selected == null) return;
+        if(this.actor.Skills.Selected == null) return;
 
         TileFacade targetTile = this.tilemapManager.GetTileFromWorldPos(pos);
         if(targetTile == null) return;
 
-        Actor caster = this.actor;
-        Actor targetActor = (Actor)targetTile.Agent;
+        ActorFacade caster = this.actor;
+        ActorFacade targetActor = (ActorFacade)targetTile.Agent;
         SkillInput input = new SkillInput(caster, targetTile, targetActor);
 
-        this.skillQueueResolver.AddSkill(input, this.skills.Selected);
+        this.skillQueueResolver.AddSkill(input, this.actor.Skills.Selected);
 
         this.CancelSkill();
     }
@@ -82,7 +76,7 @@ public class ActivePlayableState : IBehaviourState
 
     private void SkillUIClickListener(Skill skill)
     {
-        if(skill != this.skills.Selected)
+        if(skill != this.actor.Skills.Selected)
         {
             this.SelectSkill(skill);
             this.SwitchToSkillSelectedMapping();

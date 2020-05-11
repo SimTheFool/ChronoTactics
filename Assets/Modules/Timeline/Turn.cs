@@ -13,30 +13,17 @@ public class Turn
     {
         public int Compare(KeyValuePair<ITimelineAgent, float> p1, KeyValuePair<ITimelineAgent, float> p2)
         {
-            if(p1.Key == p2.Key && p1.Value == p2.Value) return 0;
+            if(p1.Key == p2.Key && p1.Value == p2.Value) return 0;            
 
             int result = p1.Value.CompareTo(p2.Value);
+
             result = (result == 0) ? p2.Key.Speed.CompareTo(p1.Key.Speed) : result;
             result = (result == 0) ? p1.Key.UniqId.CompareTo(p2.Key.UniqId) : result;
             return result;
         }
     }
 
-    private bool refreshRemainingAgentsPerTurn = true;
-    private Dictionary<int, List<ITimelineAgent>> remainingAgentsPerTurn;
-    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn
-    {
-        get
-        {
-            if(this.refreshRemainingAgentsPerTurn)
-            {
-                this.remainingAgentsPerTurn = this.GetRemainingAgentsPerTurn();
-                this.refreshRemainingAgentsPerTurn = false;
-            }
-
-            return this.remainingAgentsPerTurn;
-        }
-    }
+    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.GetRemainingAgentsPerTurn();
 
     // We set a default pair of Agent/Priority, in a such a way it's lowerthan any other pair which may exists. Indeed, this pair is used to find next one in the priorities sorted list.
     private KeyValuePair<ITimelineAgent, float> currentAgentPriority = new KeyValuePair<ITimelineAgent, float>(null, -1);
@@ -88,8 +75,6 @@ public class Turn
         }
         
         this.outputAgentsAtbs[agent] = finalAtb % 100;
-
-        this.refreshRemainingAgentsPerTurn = true;
     }
 
     public void AddOrUpdateAgent(ITimelineAgent agent, int atb = -1)
@@ -115,8 +100,6 @@ public class Turn
 
     public void NewTurn()
     {
-        this.refreshRemainingAgentsPerTurn = true;
-
         if(this.nextTurn == null)
         {
             this.nextTurn = new Turn(this.outputAgentsAtbs, this.turnNb + 1);
@@ -140,8 +123,6 @@ public class Turn
 
     public ITimelineAgent MoveToNextAgent()
     {
-        this.refreshRemainingAgentsPerTurn = true;
-
         List<KeyValuePair<ITimelineAgent, float>> allAgentsPriorities = this.GetAllAgentPrioritiesFromCurrent();
         allAgentsPriorities.Remove(this.currentAgentPriority);
 
@@ -181,15 +162,5 @@ public class Turn
         }
 
         return agentsPerTurn;
-    }
-
-    public int Count
-    {
-        get
-        {
-            int count = this.RemainingAgentsPerTurn.Count;
-            count = (this.nextTurn == null) ? count : count + this.nextTurn.RemainingAgentsPerTurn.Count;
-            return count;
-        }
     }
 }

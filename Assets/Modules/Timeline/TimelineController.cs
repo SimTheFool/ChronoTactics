@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Linq;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TimelineController : MonoBehaviour
@@ -10,44 +12,47 @@ public class TimelineController : MonoBehaviour
 
     private float timer = 0;
     public float Timer => this.timer;
-    private bool isPaused = false;
+    private bool isPaused = true;
     private Turn currentTurn = null;
     private ITimelineAgent currentAgent = null;
 
-    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn
-    {
-        get
-        {
-            return this.currentTurn?.RemainingAgentsPerTurn;
-        }
-    }
-
+    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.currentTurn?.RemainingAgentsPerTurn;
+    public int RemainingAgentsCount => this.RemainingAgentsPerTurn.Aggregate(0, (acc, elem) => acc += elem.Value.Count);
 
     public void Init(List<ITimelineAgent> agents)
     {
         this.timer = 0;
         this.currentTurn = new Turn(new HashSet<ITimelineAgent>(agents));
         this.Play();
+        this.OnTimelineChange();
     }
 
     public bool Process()
     {
         this.PreviewTurns();
-        return this.PlayCurrentTurn();
+        bool result =  this.PlayCurrentTurn();
+        this.ProcessEventQueue();
+        return result;
     }
 
     private void PreviewTurns()
     {
-        while(this.currentTurn.Count < this.previewedAgentNb)
+        while(this.RemainingAgentsCount < this.previewedAgentNb)
         {
             this.currentTurn.NewTurn();
+            this.OnTimelineChange();
         }
     }
 
     private bool PlayCurrentTurn()
     {
         // We update the timer for current actor.
-        if(!this.isPaused) this.timer -= Time.deltaTime;
+        if(!this.isPaused)
+        {
+            this.timer -= Time.deltaTime;
+            this.OnTimerChange();
+        }
+        
         if(timer > 0) return false;
 
         // If time is up, we move to next agent for this turn.
@@ -72,6 +77,7 @@ public class TimelineController : MonoBehaviour
 
         this.timer = this.secondsPerAgent;
 
+        this.OnTimelineChange();
         return false;
     }
 
@@ -93,11 +99,44 @@ public class TimelineController : MonoBehaviour
     public void AddOrUpdateAgent(ITimelineAgent agent)
     {
         this.currentTurn.AddOrUpdateAgent(agent);
+        this.OnTimelineChange();
     }
 
     public void RemoveAgent(ITimelineAgent agent)
     {
         this.currentTurn.RemoveAgent(agent);
+        this.OnTimelineChange();
+    }
+
+    // Events
+    private HashSet<Action> eventQueue = new HashSet<Action>();
+    private void ProcessEventQueue()
+    {
+        if(this.eventQueue.Count <= 0)
+            return;
+
+        foreach(Action action in this.eventQueue)
+        {
+            action.Invoke();
+        }
+
+        this.eventQueue.Clear();
+    }
+
+    public event Action<Dictionary<int, List<ITimelineAgent>>> onTimelineChange;
+    private void OnTimelineChange()
+    {
+        this.eventQueue.Add(() => {
+            this.onTimelineChange?.Invoke(this.RemainingAgentsPerTurn);
+        });
+    }
+
+    public event Action<float> onTimerChange;
+    private void OnTimerChange()
+    {
+        this.eventQueue.Add(() => {
+            this.onTimerChange?.Invoke(this.timer);
+        });
     }
 
     /* private void OnGUI()

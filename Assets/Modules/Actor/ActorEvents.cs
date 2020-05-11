@@ -1,16 +1,32 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System;
 
-public class ActorEvents : MonoBehaviour
+public class ActorEvents : BaseActor
 {
-    private delegate void ActorAction(Actor actor);
-    private static event ActorAction onPlayableStateActivation;
-    public static void OnPlayableStateActivation(Actor actor) => onPlayableStateActivation?.Invoke(actor);
+    public static HashSet<Action> eventQueue = new HashSet<Action>();
 
-    private delegate void IntAction(int value);
-    private event IntAction onHealthChange;
-    public void OnHealthChange(int health) => this.onHealthChange?.Invoke(health);
-    private event IntAction onMaxHealthChange;
-    public void OnMaxHealthChange(int maxHealth) => this.onMaxHealthChange?.Invoke(maxHealth);
+    public static event Action<ActorFacade, Action<Skill>> onPlayableStateEnabled;
+    public static void OnPlayableStateEnabled(ActorFacade actor, Action<Skill> selectSkillAction)
+    {
+        eventQueue.Add(() => onPlayableStateEnabled?.Invoke(actor, selectSkillAction));
+    }
 
+    public static event Action<ActorFacade> onPlayableStateDisabled;
+    public static void OnPlayableStateDisabled(ActorFacade actor)
+    {
+        eventQueue.Add(() => onPlayableStateDisabled?.Invoke(actor));
+    }
 
+    void Update()
+    {
+        if(eventQueue.Count <= 0)
+            return;
+
+        foreach(Action action in eventQueue)
+        {
+            action.Invoke();
+        }
+
+        eventQueue.Clear();
+    }
 }

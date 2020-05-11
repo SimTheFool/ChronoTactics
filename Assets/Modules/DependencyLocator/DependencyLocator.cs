@@ -78,13 +78,4 @@ public class DependencyLocator : MonoBehaviour
     {
         return instance.spawner;
     }
-
-
-    [SerializeField]
-    private CombatControlsUI combatControlsUI = null;
-
-    public static CombatControlsUI GetCombatControls()
-    {
-        return instance.combatControlsUI;
-    }
 }

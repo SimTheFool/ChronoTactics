@@ -10,9 +10,14 @@ PrefabInstance:
     - target: {fileID: 1505169732221495779, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: speed
-      value: 75
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 3312033066583196850, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: actorName
+      value: Paulette
+      objectReference: {fileID: 0}
+    - target: {fileID: 7027418081046793197, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: actorName
       value: Paulette

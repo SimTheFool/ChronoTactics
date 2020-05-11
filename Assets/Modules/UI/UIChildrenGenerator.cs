@@ -3,59 +3,62 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class UIChildrenGenerator : MonoBehaviour
+public abstract class UIChildrenGenerator<TUIType> : MonoBehaviour where TUIType : MonoBehaviour
 {
     [SerializeField]
-    private GameObject uIPrefab = null;
+    private TUIType uIPrefab = null;
 
-    private List<GameObject> activeUIs = new List<GameObject>();
-    private static Dictionary<int, List<GameObject>> uIsPools = new Dictionary<int, List<GameObject>>();
+    private List<TUIType> activeUIs = new List<TUIType>();
+    private static Dictionary<int, List<TUIType>> uIsPools = new Dictionary<int, List<TUIType>>();
 
-    protected List<GameObject> GetUIsPool()
+    protected List<TUIType> GetUIsPool()
     {
         int id = uIPrefab.GetInstanceID();
-        List<GameObject> uIsPool;
+        List<TUIType> uIsPool;
 
         if(uIsPools.TryGetValue(id, out uIsPool))
         {
             return uIsPool;
         }
 
-        uIsPools.Add(id, new List<GameObject>());
+        uIsPools.Add(id, new List<TUIType>());
         return uIsPools[id];
     }
 
     private void DisableUI(int i)
     {
-        GameObject uI = this.activeUIs[i];
+        TUIType uI = this.activeUIs[i];
         this.activeUIs.RemoveAt(i);
-        uI.SetActive(false);
+        uI.gameObject.SetActive(false);
         this.GetUIsPool().Add(uI);
+        //Canvas.ForceUpdateCanvases();
     }
 
     private void ActivateOrCreateUI(int i)
     {
-        GameObject uI;
-        List<GameObject> uIsPool = this.GetUIsPool();
+        TUIType uI;
+        List<TUIType> uIsPool = this.GetUIsPool();
 
         if(uIsPool.Count == 0)
         {
-            uI = Instantiate(this.uIPrefab); 
+            uI = Instantiate(this.uIPrefab);
         }
         else
         {
             uI = uIsPool[0];
             uIsPool.RemoveAt(0);
-            uI.SetActive(true);
+            uI.gameObject.SetActive(true);
         }
 
         uI.transform.SetParent(this.gameObject.transform);
+        uI.transform.SetAsLastSibling();
         this.activeUIs.Add(uI);
-        Canvas.ForceUpdateCanvases();
+        //Canvas.ForceUpdateCanvases();
     }
 
-    public void Paint<TElement>(IEnumerable<TElement> enumerable, Action<GameObject, TElement> setUICallback)
+    public void Paint<TElement>(IEnumerable<TElement> enumerable, Action<TUIType, TElement> setUICallback)
     {        
+        Canvas.ForceUpdateCanvases();
         if(enumerable == null || enumerable.Count() == 0) return;
 
         int length = enumerable.Count();
@@ -74,8 +77,8 @@ public abstract class UIChildrenGenerator : MonoBehaviour
             }
 
             TElement elem  = enumerable.ElementAt(i);
-            GameObject uI = this.activeUIs[i];
+            TUIType uI = this.activeUIs[i];
             setUICallback(uI, elem);
-        }   
+        }
     }
 }

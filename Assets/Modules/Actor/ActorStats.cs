@@ -1,28 +1,35 @@
 using UnityEngine;
 
-public class ActorStats : MonoBehaviour
+public class ActorStats : BaseActor
 {
-    private Actor actor = null;
-    private Actor Actor
-    {
-        get
-        {
-            if(this.actor == null)
-                this.actor.GetComponent<Actor>();
-            return this.actor;
-        }
-    }
 
     [SerializeField]
     private int maxHealth = 100;
-    public int MaxHealth => this.maxHealth;
+    public int MaxHealth
+    {
+        get => this.maxHealth;
+        set
+        {
+            /* if(value != this.maxHealth)
+                this.Events.OnStatsChange(this.Facade); */
+
+            this.maxHealth = value;
+        }
+    }
 
     [SerializeField]
     private int health = 100;
     public int Health
     {
         get => this.health;
-        set => this.health = Mathf.Clamp(value, 0, this.maxHealth);
+        set
+        {
+            int newHealth = Mathf.Clamp(value, 0, this.maxHealth);
+/*             if(newHealth != this.health)
+                this.Events.OnStatsChange(this.Facade); */
+
+            this.health = newHealth;
+        }
     }
 
     [SerializeField]

@@ -27,10 +27,10 @@ public class CombatGameState : IGameState
     {
         if(this.levelData == null) return;
 
-        List<Actor> newActors = new List<Actor>();
-        foreach(Actor actor in this.levelData.actors)
+        List<ActorFacade> newActors = new List<ActorFacade>();
+        foreach(ActorFacade actor in this.levelData.actors)
         {
-            Actor newActor = this.spawner.Spawn(actor);
+            ActorFacade newActor = this.spawner.Spawn(actor);
             newActors.Add(newActor);
         }
         this.spawner.Spawn(levelData.map);

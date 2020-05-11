@@ -10,10 +10,11 @@ GameObject:
   m_Component:
   - component: {fileID: 8843810800189083925}
   - component: {fileID: 3158154361242603187}
-  - component: {fileID: 8843810800189083926}
+  - component: {fileID: 7027418081046793197}
   - component: {fileID: 5620074782024390275}
   - component: {fileID: 1505169732221495779}
-  - component: {fileID: 4229863678788539455}
+  - component: {fileID: 4270564536690916912}
+  - component: {fileID: 414156577739058831}
   m_Layer: 0
   m_Name: Actor
   m_TagString: Untagged
@@ -85,7 +86,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8843810800189083926
+--- !u!114 &7027418081046793197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -94,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8843810800189083924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fab08d4bd1768d6429948f2c805a1370, type: 3}
+  m_Script: {fileID: 11500000, guid: 61e6921af25c0d74486ea4bd232df98b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playable: 1
@@ -113,7 +114,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   move: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2, type: 2}
   endTurn: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340, type: 2}
-  others: []
+  others:
+  - {fileID: 11400000, guid: 7b750bd054d93054fa34816c333906b8, type: 2}
 --- !u!114 &1505169732221495779
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -130,7 +132,7 @@ MonoBehaviour:
   health: 100
   atb: 0
   speed: 100
---- !u!114 &4229863678788539455
+--- !u!114 &4270564536690916912
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -139,6 +141,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 8843810800189083924}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 604068065698eeb4aa3422d5a7520c03, type: 3}
+  m_Script: {fileID: 11500000, guid: f395d9468f5061a45bf463f3369c028c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &414156577739058831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8843810800189083924}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 549be1c11e187174cb18a112694c81c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

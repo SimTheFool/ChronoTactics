@@ -1,10 +1,10 @@
 public class SkillInput
 {
-    private Actor caster;
+    private ActorFacade caster;
     private TileFacade targetTile;
-    private Actor targetActor;
+    private ActorFacade targetActor;
 
-    public Actor Caster
+    public ActorFacade Caster
     {
         get
         {
@@ -20,7 +20,7 @@ public class SkillInput
         }
     }
 
-    public Actor TargetActor
+    public ActorFacade TargetActor
     {
         get
         {
@@ -28,7 +28,7 @@ public class SkillInput
         }
     }
 
-    public SkillInput(Actor caster, TileFacade targetTile, Actor targetActor = null)
+    public SkillInput(ActorFacade caster, TileFacade targetTile, ActorFacade targetActor = null)
     {
         this.caster = caster;
         this.targetTile = targetTile;

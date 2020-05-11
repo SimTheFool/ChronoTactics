@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public Actor Spawn(Actor actor)
+    public ActorFacade Spawn(ActorFacade actor)
     {
-        Actor newActor = GameObject.Instantiate(actor);
+        ActorFacade newActor = GameObject.Instantiate(actor);
         return newActor;
     }
 
