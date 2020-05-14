@@ -31,7 +31,6 @@ public abstract class UIChildrenGenerator<TUIType> : MonoBehaviour where TUIType
         this.activeUIs.RemoveAt(i);
         uI.gameObject.SetActive(false);
         this.GetUIsPool().Add(uI);
-        //Canvas.ForceUpdateCanvases();
     }
 
     private void ActivateOrCreateUI(int i)
@@ -53,13 +52,11 @@ public abstract class UIChildrenGenerator<TUIType> : MonoBehaviour where TUIType
         uI.transform.SetParent(this.gameObject.transform);
         uI.transform.SetAsLastSibling();
         this.activeUIs.Add(uI);
-        //Canvas.ForceUpdateCanvases();
     }
 
     public void Paint<TElement>(IEnumerable<TElement> enumerable, Action<TUIType, TElement> setUICallback)
     {        
-        Canvas.ForceUpdateCanvases();
-        if(enumerable == null || enumerable.Count() == 0) return;
+        if(enumerable == null) return;
 
         int length = enumerable.Count();
 

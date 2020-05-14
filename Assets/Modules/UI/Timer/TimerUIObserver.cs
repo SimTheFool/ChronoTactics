@@ -13,7 +13,7 @@ public class TimerUIObserver : MonoBehaviour
         this.timelineController = DependencyLocator.getTimelineController();
         this.timerLabel = this.GetComponent<TextMeshProUGUI>();
 
-        this.timelineController.onTimerChange += this.RenderTimer;
+        this.timelineController.Events.onTimerChange += this.RenderTimer;
     }
 
     void RenderTimer(float time)
