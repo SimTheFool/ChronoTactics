@@ -1,75 +1,83 @@
-using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
-[CreateAssetMenu(fileName = "Skill", menuName = "ScriptableObjects/Skill", order = 1)]
-public class Skill : ScriptableObject
+public abstract class Skill
 {
+    protected string skillName = "";
+    public string Name => this.skillName;
 
-    [SerializeField]
-    private string skillName = "";
-    public string Name
+    protected bool sync = true;
+
+    protected Dictionary<SkillComposite, bool> statePerComposites;
+
+    // Return true if skill is done processing, else return false;
+    public bool Process()
     {
-        get
+        if(this.statePerComposites.Count == 0)
+            return true;
+
+        this.ProcessComposites();
+        if(this.ShouldMoveToNextComposites())
+            this.MoveToNextComposites();
+
+        return false;
+    }
+
+    private void ProcessComposites()
+    {
+        List<SkillComposite> composites = new List<SkillComposite>(this.statePerComposites.Keys);
+
+        foreach (SkillComposite composite in composites)
         {
-            return this.skillName;
+            if(this.statePerComposites[composite] == true)
+                continue;
+
+            this.statePerComposites[composite] = composite.Process();
         }
     }
 
-    [SerializeField]
-    private List<string> commandsName = new List<string>();
-    private List<SkillCommand> commandsList = null;
-
-    private Queue<SkillCommand> commands;
-    private SkillCommand currentCommand = null;
-
-    void OnEnable()
+    private bool ShouldMoveToNextComposites()
     {
-        this.commandsList = new List<SkillCommand>();
-
-        foreach(string name in this.commandsName)
+        if(this.sync)
         {
-            this.commandsList.Add(SkillCommandRegistry.skillCommands[name]);
-        }
-    }
-
-    public bool Process(SkillInput input)
-    {
-        bool done;
-
-        if(this.currentCommand != null)
-        {
-            done = this.currentCommand.Process(input);
+            bool areAllCompositesDone = !this.statePerComposites.Any(elem => elem.Value == false);
+            if(areAllCompositesDone)
+                return true;
         }
         else
         {
-            done = true;
-        }
-
-        if(done == true)
-        {
-            bool result = this.MoveToNextCommand(input);
-            return !result;
+            bool isOneCompositeDone = this.statePerComposites.Any(elem => elem.Value == true);
+            if(isOneCompositeDone)
+                return true;
         }
 
         return false;
     }
 
-    public void Init(SkillInput input)
+    private void MoveToNextComposites()
     {
-        this.commands = new Queue<SkillCommand>(this.commandsList);
-        this.MoveToNextCommand(input);
-    }
-
-    public bool MoveToNextCommand(SkillInput input)
-    {
-        if(this.commands.Count == 0)
+        Dictionary<SkillComposite, bool> nextStatePerComposites = new Dictionary<SkillComposite, bool>();
+        foreach (KeyValuePair<SkillComposite, bool> kvp in this.statePerComposites)
         {
-            this.currentCommand = null;
-            return false;
+            SkillComposite composite = kvp.Key;
+            bool isDoneProcessing = kvp.Value;
+
+            if(isDoneProcessing)
+            {
+                foreach (SkillComposite child in composite.Children)
+                {
+                    child.Init();
+                    nextStatePerComposites[child] = false;
+                }
+                continue;
+            }
+
+            nextStatePerComposites[composite] = isDoneProcessing;
         }
 
-        this.currentCommand = this.commands.Dequeue();
-        this.currentCommand.Init(input);
-        return true;
+        this.statePerComposites = nextStatePerComposites;
     }
+
+    // Invoked in order to build the composite tree.
+    public abstract void BuildSkill(SkillInput input);
 }

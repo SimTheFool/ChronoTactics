@@ -18,7 +18,7 @@ public class SkillQueueResolver : MonoBehaviour
 
         if(this.currentSkill != null)
         {
-            done = this.currentSkill.Process(this.currentInput);
+            done = this.currentSkill.Process();
         }
 
         if(done == true)
@@ -38,6 +38,6 @@ public class SkillQueueResolver : MonoBehaviour
         KeyValuePair<SkillInput, Skill> skill = this.skills.Dequeue();
         this.currentSkill = skill.Value;
         this.currentInput = skill.Key;
-        this.currentSkill.Init(this.currentInput);
+        this.currentSkill.BuildSkill(this.currentInput);
     }
 }

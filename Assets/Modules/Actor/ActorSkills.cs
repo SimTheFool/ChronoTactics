@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 public class ActorSkills : BaseActor
 {
+    private void Awake() {
+        this.move = new LoggingSkill();
+        this.endTurn = new LoggingSkill();
+        this.others = new List<Skill>(){new LoggingSkill()};
+    }
+
     public List<Skill> All
     {
         get
