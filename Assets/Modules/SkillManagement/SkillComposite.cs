@@ -2,41 +2,54 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-public class SkillComposite
-{
-
+public class SkillComposite 
+{   
     private SkillComposite parent = null;
+
     private List<SkillComposite> children = new List<SkillComposite>();
     public List<SkillComposite> Children => this.children;
 
-    private SkillProcess skillProcess = null;
+    private SkillProcess process = null;
 
-    private Func<SkillProcess, SkillProcess> initCallback;
+    protected event Action<SkillProcess> onDoneProcessing;
 
-    public SkillComposite(Func<SkillProcess, SkillProcess> initCallback)
+    public SkillComposite(SkillProcess process = null)
     {
-        this.initCallback = initCallback;
+        this.process = process;
     }
 
     public bool Process()
     {
-        return this.skillProcess.Process();
+        //Debug.Log($"process {this.process}");
+        return this.process.Process();
     }
 
-    public void Init()
+    public void OnDoneProcessing()
     {
-        this.skillProcess = this.initCallback(this.parent?.skillProcess);
+        this.onDoneProcessing?.Invoke(this.process);
     }
 
-    public SkillComposite Do(Func<SkillProcess, SkillProcess> initCallback)
+    public SkillComposite Do(Func<SkillProcess, SkillProcess> childInit)
     {
-        this.AddChild(initCallback);
+        this.AddChild(childInit);
         return this;
     }
 
-    public SkillComposite In(Func<SkillProcess, SkillProcess> initCallback)
+    public SkillComposite DoSeveral(Func<SkillProcess, IEnumerable<SkillProcess>> childrenInit)
     {
-        SkillComposite child = this.AddChild(initCallback);
+        this.AddChildren(childrenInit);
+        return this;
+    }
+
+    public SkillComposite In(Func<SkillProcess, SkillProcess> childInit)
+    {
+        SkillComposite child = this.AddChild(childInit);
+        return child;
+    }
+
+    public SkillComposite InSeveral(Func<SkillProcess, IEnumerable<SkillProcess>> childrenInit)
+    {
+        SkillComposite child = this.AddChildren(childrenInit);
         return child;
     }
 
@@ -45,12 +58,48 @@ public class SkillComposite
         return this.parent;
     }
 
-    private SkillComposite AddChild(Func<SkillProcess, SkillProcess> initCallback)
+    private SkillComposite AddChild(Func<SkillProcess, SkillProcess> childInit)
     {
-        SkillComposite child = new SkillComposite(initCallback);
-        child.parent = this;
-        this.children.Add(child);
+        SkillComposite child = this.CreateChild();
+
+        this.onDoneProcessing += (thisProcess) => {
+            SkillProcess process = childInit(thisProcess);
+            child.process = process;
+        };
 
         return child;
-    } 
+    }
+
+    private SkillComposite AddChildren(Func<SkillProcess, IEnumerable<SkillProcess>> childrenInit)
+    {
+        SkillComposite child = this.CreateChild();
+
+        this.onDoneProcessing += (thisProcess) => {
+            IEnumerable<SkillProcess> processes = childrenInit(thisProcess);
+            foreach(SkillProcess process in processes)
+            {
+                SkillComposite newChild = this.CreateChild(child);
+                newChild.process = process;
+            }
+
+            this.children.Remove(child);
+        };
+
+        return child;
+    }
+
+    private SkillComposite CreateChild(SkillComposite original = null)
+    {
+        SkillComposite child = new SkillComposite();
+        this.children.Add(child);
+
+        child.parent = this;
+        if(original != null)
+        {
+            child.onDoneProcessing += original.onDoneProcessing;
+            child.children = new List<SkillComposite>(original.children);
+        }
+
+        return child;
+    }
 }

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
+[System.Serializable]
 public abstract class Skill
 {
     protected string skillName = "";
@@ -8,15 +9,17 @@ public abstract class Skill
 
     protected bool sync = true;
 
-    protected Dictionary<SkillComposite, bool> statePerComposites;
+    private List<SkillComposite> composites;
+    private List<bool> states;
 
     // Return true if skill is done processing, else return false;
     public bool Process()
     {
-        if(this.statePerComposites.Count == 0)
+        if(this.composites.Count == 0)
             return true;
 
         this.ProcessComposites();
+
         if(this.ShouldMoveToNextComposites())
             this.MoveToNextComposites();
 
@@ -25,14 +28,12 @@ public abstract class Skill
 
     private void ProcessComposites()
     {
-        List<SkillComposite> composites = new List<SkillComposite>(this.statePerComposites.Keys);
-
-        foreach (SkillComposite composite in composites)
+        for (int i = 0; i < this.composites.Count; i++)
         {
-            if(this.statePerComposites[composite] == true)
+            if(this.states[i] == true)
                 continue;
 
-            this.statePerComposites[composite] = composite.Process();
+            this.states[i] = this.composites[i].Process();
         }
     }
 
@@ -40,13 +41,13 @@ public abstract class Skill
     {
         if(this.sync)
         {
-            bool areAllCompositesDone = !this.statePerComposites.Any(elem => elem.Value == false);
+            bool areAllCompositesDone = !this.states.Any(elem => elem == false);
             if(areAllCompositesDone)
                 return true;
         }
         else
         {
-            bool isOneCompositeDone = this.statePerComposites.Any(elem => elem.Value == true);
+            bool isOneCompositeDone = this.states.Any(elem => elem == true);
             if(isOneCompositeDone)
                 return true;
         }
@@ -56,28 +57,42 @@ public abstract class Skill
 
     private void MoveToNextComposites()
     {
-        Dictionary<SkillComposite, bool> nextStatePerComposites = new Dictionary<SkillComposite, bool>();
-        foreach (KeyValuePair<SkillComposite, bool> kvp in this.statePerComposites)
+        List<SkillComposite> nextComposites = new List<SkillComposite>();
+        List<bool> nextStates = new List<bool>();
+
+        for (int i = 0; i < this.composites.Count; i++)
         {
-            SkillComposite composite = kvp.Key;
-            bool isDoneProcessing = kvp.Value;
+            SkillComposite composite = this.composites[i];
+            bool isDoneProcessing = this.states[i];
 
             if(isDoneProcessing)
             {
+                composite.OnDoneProcessing();
+
                 foreach (SkillComposite child in composite.Children)
                 {
-                    child.Init();
-                    nextStatePerComposites[child] = false;
+                    nextComposites.Add(child);
+                    nextStates.Add(false);
                 }
                 continue;
             }
 
-            nextStatePerComposites[composite] = isDoneProcessing;
+            nextComposites.Add(composite);
+            nextStates.Add(isDoneProcessing);
         }
 
-        this.statePerComposites = nextStatePerComposites;
+        this.composites = nextComposites;
+        this.states = nextStates;
+    }
+
+    public void Init(SkillInput input)
+    {
+        SkillComposite composite = this.BuildSkill(input);
+
+        this.composites = new List<SkillComposite>(){composite};
+        this.states = new List<bool>(){false};
     }
 
     // Invoked in order to build the composite tree.
-    public abstract void BuildSkill(SkillInput input);
+    protected abstract SkillComposite BuildSkill(SkillInput input);
 }

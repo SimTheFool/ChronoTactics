@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 public class DoubleWordProcess :  SkillProcess
 {
@@ -8,6 +9,8 @@ public class DoubleWordProcess :  SkillProcess
     private string outputWord = "";
     public string OutputWord => this.outputWord;
 
+    private int count = 0;
+
     public DoubleWordProcess(string word = "")
     {
         this.word = word;
@@ -15,8 +18,14 @@ public class DoubleWordProcess :  SkillProcess
 
     public override bool Process()
     {
-        this.word += this.word;
-        this.outputWord = this.word;
+        this.outputWord = this.word + this.word;
+        this.count++;
         return true;
+    }
+
+    public override void DebugStr()
+    {
+        /* Debug.Log("a");
+        Debug.Log(word); */
     }
 }

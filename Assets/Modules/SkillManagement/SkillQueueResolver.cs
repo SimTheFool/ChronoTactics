@@ -38,6 +38,6 @@ public class SkillQueueResolver : MonoBehaviour
         KeyValuePair<SkillInput, Skill> skill = this.skills.Dequeue();
         this.currentSkill = skill.Value;
         this.currentInput = skill.Key;
-        this.currentSkill.BuildSkill(this.currentInput);
+        this.currentSkill.Init(this.currentInput);
     }
 }

@@ -27,6 +27,11 @@ PrefabInstance:
       propertyPath: playable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5620074782024390275, guid: 1dcc250b6cc000f40a9378f43ae795d3,
+        type: 3}
+      propertyPath: others.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 7027418081046793197, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: actorName
@@ -111,14 +116,12 @@ PrefabInstance:
         type: 3}
       propertyPath: moveSkill
       value: 
-      objectReference: {fileID: 11400000, guid: 206f7dc6387f9a3488b050b69f37c4e2,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: endTurnSkill
       value: 
-      objectReference: {fileID: 11400000, guid: eca4c46acf555a748bd593d337e52340,
-        type: 2}
+      objectReference: {fileID: 0}
     - target: {fileID: 8843810800189083926, guid: 1dcc250b6cc000f40a9378f43ae795d3,
         type: 3}
       propertyPath: playable
