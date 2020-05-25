@@ -3,7 +3,6 @@ using UnityEngine;
 public class DisplayWordProcess : SkillProcess
 {
     private string wordToDisplay = null;
-    private int count = 0;
 
     public DisplayWordProcess(string word)
     {
@@ -12,14 +11,7 @@ public class DisplayWordProcess : SkillProcess
 
     public override bool Process()
     {
-        this.count++;
-        Debug.Log(this.wordToDisplay+ " " + this.count);
+        Debug.Log(this.wordToDisplay);
         return true;
-    }
-    
-    public override void DebugStr()
-    {
-        Debug.Log("a");
-        Debug.Log(wordToDisplay);
     }
 }

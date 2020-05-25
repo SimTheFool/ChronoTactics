@@ -26,24 +26,16 @@ public class LoggingSkill : Skill
         };
 
         composite
-        /* .In(onDoubleWord_DoubleWord)
-            .Do(onDoubleWord_DisplayWord)
-        .Out()
-        .Do(onDoubleWord_DisplayWord) */
-        .In(parentProcess => new SplitStringProcess("abc def.ghi.jkl mno", '.'))
-            .InSeveral(parentProcess => {
-                SplitStringProcess parent = (SplitStringProcess)parentProcess;
-                return parent.words.Select(word => new DoubleWordProcess(word));
-            })
-                .Do(parent => {
-                    return new DisplayWordProcess(((DoubleWordProcess)parent).OutputWord);
-                })
-                /* .DoSeveral(parentProcess => {
+        .In(parentProcess => new SplitStringProcess("abc#def.ghi.jkl#mno", '.'))
+                .InSeveral(parentProcess => {
                     SplitStringProcess parent = (SplitStringProcess)parentProcess;
-                    //Debug.Log(parent);
-                    return parent.words.Select(word => new DisplayWordProcess(word));
-                }) */
-            .Out()
+                    return parent.words.Select(word => new SplitStringProcess(word, '#'));
+                })
+                    .DoSeveral(parentProcess => {
+                        SplitStringProcess parent = (SplitStringProcess)parentProcess;
+                        return parent.words.Select(word => new DisplayWordProcess(word));
+                    })
+                .Out()
         .Out()
         ;
 

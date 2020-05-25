@@ -22,10 +22,4 @@ public class DoubleWordProcess :  SkillProcess
         this.count++;
         return true;
     }
-
-    public override void DebugStr()
-    {
-        /* Debug.Log("a");
-        Debug.Log(word); */
-    }
 }

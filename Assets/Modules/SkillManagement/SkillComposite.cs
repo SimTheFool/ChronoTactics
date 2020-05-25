@@ -11,7 +11,7 @@ public class SkillComposite
 
     private SkillProcess process = null;
 
-    protected event Action<SkillProcess> onDoneProcessing;
+    protected event Action<SkillComposite> onDoneProcessing;
 
     public SkillComposite(SkillProcess process = null)
     {
@@ -20,13 +20,12 @@ public class SkillComposite
 
     public bool Process()
     {
-        //Debug.Log($"process {this.process}");
         return this.process.Process();
     }
 
     public void OnDoneProcessing()
     {
-        this.onDoneProcessing?.Invoke(this.process);
+        this.onDoneProcessing?.Invoke(this);
     }
 
     public SkillComposite Do(Func<SkillProcess, SkillProcess> childInit)
@@ -60,35 +59,37 @@ public class SkillComposite
 
     private SkillComposite AddChild(Func<SkillProcess, SkillProcess> childInit)
     {
-        SkillComposite child = this.CreateChild();
+        int childIndex = this.CreateChild();
 
-        this.onDoneProcessing += (thisProcess) => {
-            SkillProcess process = childInit(thisProcess);
-            child.process = process;
+        this.onDoneProcessing += (thisComposite) => {
+            SkillProcess process = childInit(thisComposite.process);
+            thisComposite.children[childIndex].process = process;
         };
 
-        return child;
+        return this.children[childIndex];
     }
 
     private SkillComposite AddChildren(Func<SkillProcess, IEnumerable<SkillProcess>> childrenInit)
     {
-        SkillComposite child = this.CreateChild();
+        int childIndex = this.CreateChild();
 
-        this.onDoneProcessing += (thisProcess) => {
-            IEnumerable<SkillProcess> processes = childrenInit(thisProcess);
+        this.onDoneProcessing += (thisComposite) => {
+            IEnumerable<SkillProcess> processes = childrenInit(thisComposite.process);
+
+            SkillComposite orginalChild = thisComposite.children[childIndex];
+            thisComposite.children.RemoveAt(childIndex);
+
             foreach(SkillProcess process in processes)
             {
-                SkillComposite newChild = this.CreateChild(child);
-                newChild.process = process;
+                int newChildIndex = thisComposite.CreateChild(orginalChild);
+                thisComposite.children[newChildIndex].process = process;
             }
-
-            this.children.Remove(child);
         };
 
-        return child;
+        return this.children[childIndex];
     }
 
-    private SkillComposite CreateChild(SkillComposite original = null)
+    private int CreateChild(SkillComposite original = null)
     {
         SkillComposite child = new SkillComposite();
         this.children.Add(child);
@@ -97,9 +98,12 @@ public class SkillComposite
         if(original != null)
         {
             child.onDoneProcessing += original.onDoneProcessing;
-            child.children = new List<SkillComposite>(original.children);
+            foreach(SkillComposite grandChild in original.children)
+            {
+                child.CreateChild(grandChild);
+            }
         }
 
-        return child;
+        return this.children.Count - 1;
     }
 }
