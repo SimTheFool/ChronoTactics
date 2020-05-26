@@ -1,16 +1,26 @@
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 [System.Serializable]
-public abstract class Skill
+public class Skill
 {
     protected string skillLabel = "";
     public string Label => this.skillLabel;
 
     protected bool sync = true;
 
+    // Invoked in order to build the composite tree.
+    protected Func<SkillInput, SkillComposite> buildSkillCbk;
+
     private List<SkillComposite> composites;
     private List<bool> states;
+
+    public Skill(Func<SkillInput, SkillComposite> buildSkillCbk, string skillLabel)
+    {
+        this.buildSkillCbk = buildSkillCbk;
+        this.skillLabel = skillLabel;
+    }
 
     // Return true if skill is done processing, else return false;
     public bool Process()
@@ -87,12 +97,9 @@ public abstract class Skill
 
     public void Init(SkillInput input)
     {
-        SkillComposite composite = this.BuildSkill(input);
+        SkillComposite composite = this.buildSkillCbk(input);
 
         this.composites = new List<SkillComposite>(){composite};
         this.states = new List<bool>(){false};
     }
-
-    // Invoked in order to build the composite tree.
-    protected abstract SkillComposite BuildSkill(SkillInput input);
 }

@@ -4,29 +4,9 @@ public class SkillInput
     private TileFacade targetTile;
     private ActorFacade targetActor;
 
-    public ActorFacade Caster
-    {
-        get
-        {
-            return this.caster;
-        }
-    }
-
-    public TileFacade TargetTile
-    {
-        get
-        {
-            return this.targetTile;
-        }
-    }
-
-    public ActorFacade TargetActor
-    {
-        get
-        {
-            return this.targetActor;
-        }
-    }
+    public ActorFacade Caster => this.caster;
+    public TileFacade TargetTile => this.targetTile;
+    public ActorFacade TargetActor => this.targetActor;
 
     public SkillInput(ActorFacade caster, TileFacade targetTile, ActorFacade targetActor = null)
     {

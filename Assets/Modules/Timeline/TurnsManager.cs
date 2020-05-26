@@ -8,6 +8,9 @@ public class TurnsManager : TimelineComponentsBridge
     private int previewedAgentNb = 0;
     private Turn linkedTurns = null;
 
+    public ITimelineAgent CurrentAgent => this.linkedTurns.CurrentAgent;
+    public float CurrentPriorityScore => this.linkedTurns.CurrentPriorityScore;
+
     public void Init(List<ITimelineAgent> agents)
     {
         Dictionary<ITimelineAgent, int> agentsAtbs = agents.ToDictionary(agent => agent, agent => agent.Atb);

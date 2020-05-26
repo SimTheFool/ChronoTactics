@@ -11,6 +11,9 @@ public class TimelineController : TimelineComponentsBridge
     private float timer = 0;
     private bool isPlaying = false;
     private ITimelineAgent currentAgent = null;
+    
+    public ITimelineAgent CurrentAgent => this.Turns.CurrentAgent;
+    public float CurrentPriorityScore => this.Turns.CurrentPriorityScore;
 
     public void Init(List<ITimelineAgent> agents)
     {
@@ -41,12 +44,11 @@ public class TimelineController : TimelineComponentsBridge
         if(nextAgent == null)
             return true;
 
+        this.timer = this.secondsPerAgent;
         this.currentAgent?.OnEndPass();
         this.currentAgent = nextAgent;
         this.currentAgent.OnBeginPass();
         
-        this.timer = this.secondsPerAgent;
-
         return false;
     }
 

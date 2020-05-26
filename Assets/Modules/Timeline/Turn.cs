@@ -23,14 +23,15 @@ public class Turn
         }
     }
 
-    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.GetRemainingAgentsPerTurn();
-    public ITimelineAgent CurrentAgent => this.currentAgentPriority.Key;
-    public int RemainingAgentsCount => this.RemainingAgentsPerTurn.Aggregate(0, (acc, elem) => acc += elem.Value.Count);
-
-    // We set a default pair of Agent/Priority, in a such a way it's lowerthan any other pair which may exists. Indeed, this pair is used to find next one in the priorities sorted list.
+    // We set a default pair of Agent/Priority, in a such a way it's lower than any other pair which may exists. Indeed, this pair is used to find next one in the priorities sorted list.
     private KeyValuePair<ITimelineAgent, float> currentAgentPriority = new KeyValuePair<ITimelineAgent, float>(null, -1);
     private int turnNb = 0;
     private Turn nextTurn = null;
+
+    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.GetRemainingAgentsPerTurn();
+    public int RemainingAgentsCount => this.RemainingAgentsPerTurn.Aggregate(0, (acc, elem) => acc += elem.Value.Count);
+    public ITimelineAgent CurrentAgent => this.currentAgentPriority.Key;
+    public float CurrentPriorityScore => this.currentAgentPriority.Value;
 
     public Turn (Dictionary<ITimelineAgent, int> agentsAtbs, int turnNb)
     {

@@ -1,11 +1,11 @@
 public class NativeEndPassSkill : Skill
 {
-    public NativeEndPassSkill()
+    public NativeEndPassSkill() : base(null, "End")
     {
-        this.skillLabel = "End";
+        this.buildSkillCbk = this.BuildSkill;
     }
 
-    protected override SkillComposite BuildSkill(SkillInput input)
+    private SkillComposite BuildSkill(SkillInput input)
     {
         SkillComposite composite = new SkillComposite(new EndPassProcess());
         return composite;

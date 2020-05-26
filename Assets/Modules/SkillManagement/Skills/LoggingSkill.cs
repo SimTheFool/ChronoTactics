@@ -4,12 +4,12 @@ using System.Linq;
 
 public class LoggingSkill : Skill
 {
-    public LoggingSkill()
+    public LoggingSkill() : base(null, "Logging")
     {
-        this.skillLabel = "logging skill";
+        this.buildSkillCbk = this.BuildSkill;
     }
 
-    protected override SkillComposite BuildSkill(SkillInput input)
+    private SkillComposite BuildSkill(SkillInput input)
     {
 
         SkillComposite composite = new SkillComposite(new DoubleWordProcess("foo"));       

@@ -31,6 +31,8 @@ public class ActorFacade: BaseActor, ITilemapAgent, ITimelineAgent
     }
 
     //ITimelineAgent implementation
+    public TimelineAgentType agentType => TimelineAgentType.Actor;
+    
     string ITimelineAgent.Name => this.actorName;
 
     public int Atb
@@ -40,6 +42,7 @@ public class ActorFacade: BaseActor, ITilemapAgent, ITimelineAgent
     }
 
     public int Speed => this.Stats.Speed;
+
     public int UniqId => this.GetInstanceID();
 
     public void OnBeginPass()
