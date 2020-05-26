@@ -24,7 +24,7 @@ public class SkillBarUIObserver : UIChildrenGenerator<SkillUIController>
     {
         this.Paint<Skill>(skills, (uI, skill) => {
 
-            uI.SetSkillName(skill.Name);
+            uI.SetSkillLabel(skill.Label);
             uI.ClearClickListeners();
             uI.Interactable = interactable;
             if(onSkillClick != null)

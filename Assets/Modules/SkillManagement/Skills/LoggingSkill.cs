@@ -1,13 +1,12 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
-using UnityEngine;
 
 public class LoggingSkill : Skill
 {
     public LoggingSkill()
     {
-        this.skillName = "logging skill";
+        this.skillLabel = "logging skill";
     }
 
     protected override SkillComposite BuildSkill(SkillInput input)

@@ -4,8 +4,8 @@ using System.Linq;
 [System.Serializable]
 public abstract class Skill
 {
-    protected string skillName = "";
-    public string Name => this.skillName;
+    protected string skillLabel = "";
+    public string Label => this.skillLabel;
 
     protected bool sync = true;
 

@@ -11,7 +11,7 @@ public class DependencyLocator : MonoBehaviour
     [SerializeField]
     private TimelineController timelineController = null;
 
-    private Finder<TileFacade> pathfinder = null;
+    private Finder<TileFacade> tileFinder = null;
 
     [SerializeField]
     private TilemapManager tilemapManager = null;
@@ -42,14 +42,14 @@ public class DependencyLocator : MonoBehaviour
         return instance.timelineController;
     }
 
-    public static Finder<TileFacade> getPathfinder()
+    public static Finder<TileFacade> getTileFinder()
     {
-        if(instance.pathfinder == null)
+        if(instance.tileFinder == null)
         {
             TilemapManager tilemap = DependencyLocator.getTilemapManager();
-            instance.pathfinder = new Finder<TileFacade>(tilemap.TilesMap);
+            instance.tileFinder = new Finder<TileFacade>(tilemap.TilesMap);
         }
-        return instance.pathfinder;
+        return instance.tileFinder;
     }
 
     public static TilemapManager getTilemapManager()

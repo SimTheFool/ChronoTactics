@@ -63,10 +63,12 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: class,
         HashSet<TConcretePositionnable> elems = new HashSet<TConcretePositionnable>();
         foreach(TConcretePositionnable elem in this.GetElementsInRange(origin, rangeMin, rangeMax,topology))
         {
-            if(filter.IsAccessible(elem))
+            if(filter != null && !filter.IsAccessible(elem))
             {
-                elems.Add(elem);
+                continue;
             }
+
+            elems.Add(elem);
         }
 
         return elems;
@@ -79,7 +81,7 @@ public class Finder<TConcretePositionnable> where TConcretePositionnable: class,
     }
 
     // A-star pathfinding algorithm.
-    public HashSet<TConcretePositionnable> findPath(TConcretePositionnable origin, TConcretePositionnable dest, ITopology topology, IFilter filter)
+    public HashSet<TConcretePositionnable> findPath(TConcretePositionnable origin, TConcretePositionnable dest, ITopology topology, IFilter filter = null)
     {
         // Nodes which must be evaluated.
         SortedSet<Node> openSet = new SortedSet<Node>(new ByHCost());

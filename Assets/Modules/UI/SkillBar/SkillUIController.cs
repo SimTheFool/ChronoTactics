@@ -36,7 +36,7 @@ public class SkillUIController : MonoBehaviour
     }
 
 
-    public void SetSkillName(string skillName)
+    public void SetSkillLabel(string skillName)
     {
         this.SkillText.text = skillName;
     }
