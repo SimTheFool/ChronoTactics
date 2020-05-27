@@ -17,8 +17,8 @@ public class AddSkillEffectProcess : SkillProcess
         Func<SkillInput, SkillComposite> autoEndedBuildSkillCbk = (input) => {
             return buildSkillCbk(input).Do((parentProcess) => new EndPassProcess());
         };
-
-        this.skill = new Skill(autoEndedBuildSkillCbk, skillLabel);
+        Skill skill = new Skill(autoEndedBuildSkillCbk, skillLabel);
+        
         this.Init(skillInput, skill, effectDuration);
     }
 

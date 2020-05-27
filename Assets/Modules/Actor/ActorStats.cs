@@ -10,9 +10,6 @@ public class ActorStats : BaseActor
         get => this.maxHealth;
         set
         {
-            /* if(value != this.maxHealth)
-                this.Events.OnStatsChange(this.Facade); */
-
             this.maxHealth = value;
         }
     }
@@ -25,8 +22,8 @@ public class ActorStats : BaseActor
         set
         {
             int newHealth = Mathf.Clamp(value, 0, this.maxHealth);
-/*             if(newHealth != this.health)
-                this.Events.OnStatsChange(this.Facade); */
+            if(newHealth != this.health)
+                this.Events.OnStatsChange(this.Facade);
 
             this.health = newHealth;
         }

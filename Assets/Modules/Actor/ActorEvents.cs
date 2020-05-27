@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using UnityEngine;
 
 public class ActorEvents : BaseActor
 {
@@ -15,6 +16,12 @@ public class ActorEvents : BaseActor
     public static void OnPlayableStateDisabled(ActorFacade actor)
     {
         eventQueue.Add(() => onPlayableStateDisabled?.Invoke(actor));
+    }
+
+    public event Action<ActorFacade> onStatsChange;
+    public void OnStatsChange(ActorFacade actor)
+    {
+        eventQueue.Add(() => this.onStatsChange?.Invoke(actor));
     }
 
     void Update()
