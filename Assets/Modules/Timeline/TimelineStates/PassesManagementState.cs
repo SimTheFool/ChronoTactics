@@ -9,7 +9,7 @@ public class PassesManagementState : TimelineState
         set => this.timer = value;
     }
 
-    public PassesManagementState(TimelineController timeline, PassesManager passesManager, TurnBreaksManager turnBreaksManager) : base(timeline, passesManager){}
+    public PassesManagementState(TimelineController timeline, PassesManager passesManager) : base(timeline, passesManager){}
 
     protected override void OnResetTimer() => this.Timer = this.timeline.SecondsPerPass;
     protected override void OnNextAgentNull() => Debug.Log("End Combat");

@@ -31,7 +31,7 @@ public class AddSkillEffectProcess : SkillProcess
 
     public override bool Process()
     {
-        DependencyLocator.getTimelineController().AddOrUpdateAgent(new SkillEffect(this.skillInput, this.skill, this.effectDuration));
+        DependencyLocator.getTimelineController().AddAgentInPasses(new SkillEffect(this.skillInput, this.skill, this.effectDuration));
         return true;
     }
 }

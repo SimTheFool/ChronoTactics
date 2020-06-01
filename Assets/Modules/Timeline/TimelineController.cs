@@ -7,11 +7,10 @@ public class TimelineController : TimelineComponentsBridge
 
     [SerializeField]
     private int secondsPerPass = 20;
-    public int SecondsPerPass
-    {
-        get => this.secondsPerPass;
-        set => this.secondsPerPass = value;
-    }
+    public int SecondsPerPass => this.secondsPerPass;
+
+    public ITimelineAgent CurrentPassAgent => this.Passes.CurrentAgent;
+    public float CurrentPassPriorityScore => this.Passes.CurrentPriorityScore;
 
     private TimelineState state = null;
     private PassesManagementState passesManagementState = null;
@@ -21,7 +20,7 @@ public class TimelineController : TimelineComponentsBridge
     {
         this.Passes.Init(agents);
 
-        this.passesManagementState = new PassesManagementState(this, this.Passes, this.TurnBreaks);
+        this.passesManagementState = new PassesManagementState(this, this.Passes);
         this.turnBreaksManagementState = new TurnBreaksManagementState(this, this.TurnBreaks);
         this.SetPassesManagementState();
     }

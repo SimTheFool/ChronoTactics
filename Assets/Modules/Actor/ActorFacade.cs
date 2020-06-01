@@ -43,10 +43,12 @@ public class ActorFacade: BaseActor, ITilemapAgent, ITimelineAgent
 
     public int Speed => this.Stats.Speed;
 
-    public int UniqId => this.GetInstanceID();
+    public (int groupId, int selfId) UniqId => (this.GetInstanceID(), 0);
 
     public void OnBeginPass()
     {
+        Debug.Log(this.Name);
+
         if(this.playable)
         {
             this.Behaviour.SetStateActivePlayable();

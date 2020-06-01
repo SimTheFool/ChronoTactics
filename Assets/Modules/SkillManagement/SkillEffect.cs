@@ -5,7 +5,7 @@ public class SkillEffect : ITimelineAgent
     private SkillQueueResolver skillQueueResolver = null;
     private TimelineController timelineController = null;
 
-    private static int count = 0;
+    private static int selfIdCount = 1;
 
     private SkillInput skillInput = null;
     private Skill skill = null;
@@ -16,10 +16,9 @@ public class SkillEffect : ITimelineAgent
         this.skillQueueResolver = DependencyLocator.GetSkillQueueResolver();
         this.timelineController = DependencyLocator.getTimelineController();
 
-        this.uniqId = this.timelineController.CurrentAgent.UniqId + SkillEffect.count;
-        SkillEffect.count++;
+        this.uniqId = (this.timelineController.CurrentPassAgent.UniqId.groupId, ++SkillEffect.selfIdCount);
 
-        int atb = (int)Mathf.Floor(100 - this.timelineController.CurrentPriorityScore * this.Speed) % 100;
+        int atb = (int)Mathf.Floor(100 - this.timelineController.CurrentPassPriorityScore * this.Speed) % 100;
         atb = (atb + 100) % 100;
         this.Atb = atb;
 
@@ -32,8 +31,8 @@ public class SkillEffect : ITimelineAgent
     public TimelineAgentType agentType => TimelineAgentType.Effect;
     public string Name => this.skill.Label;
 
-    private int uniqId;
-    public int UniqId => this.uniqId;
+    private (int groupId, int selfId) uniqId;
+    public (int groupId, int selfId) UniqId => this.uniqId;
 
     public int Atb {get; set;}
     public int Speed => 100;

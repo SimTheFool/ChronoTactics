@@ -23,25 +23,19 @@ public abstract class TimelineState
             return;
 
         this.CurrentAgent?.OnEndPass();
-
-        this.OnResetTimer();
-        this.agentsCollectionManager.MoveToNextAgent();
-
+        this.MoveToNextAgent();
         this.CurrentAgent?.OnBeginPass();
 
         if(this.CurrentAgent == null)
             this.OnNextAgentNull();
     }
 
-    protected abstract void OnResetTimer();
-    protected abstract void OnNextAgentNull();
-
     public void EndTurn() => this.Timer = -1;
 
     public void Enter()
     {
         if(this.CurrentAgent == null)
-            this.agentsCollectionManager.MoveToNextAgent();
+            this.MoveToNextAgent();
 
         if(this.CurrentAgent == null)
             this.OnNextAgentNull();
@@ -50,4 +44,14 @@ public abstract class TimelineState
     }
 
     public void Exit() => this.CurrentAgent?.OnEndPass();
+
+    protected abstract void OnResetTimer();
+    protected abstract void OnNextAgentNull();
+
+    private void MoveToNextAgent()
+    {
+        this.OnResetTimer();
+        this.agentsCollectionManager.MoveToNextAgent();
+    }
+
 }

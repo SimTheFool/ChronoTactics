@@ -28,8 +28,6 @@ public class TurnBreaksManager : TimelineComponentsBridge, ITimelineAgentsCollec
         set => this.turnBreaks.First().timer = value;
     }
 
-    public int Count => this.turnBreaks.Count;
-
     public void MoveToNextAgent()
     {
         this.turnBreaks.RemoveFirst();

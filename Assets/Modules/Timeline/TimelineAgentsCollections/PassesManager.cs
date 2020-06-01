@@ -5,11 +5,15 @@ using System.Linq;
 public class PassesManager : TimelineComponentsBridge, ITimelineAgentsCollectionManager
 {
     [SerializeField]
-    private int previewedActorNb;
+    private int previewedActorNb = 0;
 
     private Pass linkedPasses = null;
 
     private ITimelineAgent currentAgent = null;
+    private float currentPriorityScore;
+
+    public ITimelineAgent CurrentAgent => this.currentAgent;
+    public float CurrentPriorityScore => this.currentPriorityScore;
 
     public void Init(IEnumerable<ITimelineAgent> agents)
     {
@@ -19,24 +23,19 @@ public class PassesManager : TimelineComponentsBridge, ITimelineAgentsCollection
 
     public void MoveToNextAgent()
     {
-        ITimelineAgent nextAgent = this.linkedPasses.GetAgentNextTo(this.currentAgent);
+        (this.currentAgent, this.currentPriorityScore) = this.linkedPasses.GetAgentPriorityScoreNextTo(this.currentAgent, this.currentPriorityScore);
 
-        if(nextAgent != null)
+        if(this.currentAgent != null)
         {
             this.UpdateLinkedTurns();
-            this.currentAgent = nextAgent;
             return;
         }
 
-        Pass nextPass = this.linkedPasses.GetNextPass();
+        this.linkedPasses = this.linkedPasses.GetNextPass();
 
-        if(nextPass == null)
-        {
-            this.currentAgent = null;
+        if(this.linkedPasses == null)
             return;
-        }
 
-        this.linkedPasses = nextPass;
         this.MoveToNextAgent();
     }
 
@@ -54,17 +53,14 @@ public class PassesManager : TimelineComponentsBridge, ITimelineAgentsCollection
 
     private void UpdateLinkedTurns()
     {
-        /* while(this.linkedTurns.RemainingAgentsCount < this.previewedAgentNb)
+        Dictionary<int, List<ITimelineAgent>> actorsPerPass = this.linkedPasses.GetActorsPerPassNextTo(this.currentAgent, this.currentPriorityScore);
+
+        while(actorsPerPass.Aggregate(0, (acc, passAgentActors) => acc + passAgentActors.Value.Count) < this.previewedActorNb)
         {
-            this.linkedTurns.NewTurn();
+            this.linkedPasses.NewPass();
+            actorsPerPass = this.linkedPasses.GetActorsPerPassNextTo(this.currentAgent, this.currentPriorityScore);
         }
-        this.Events.OnPassesChange(this.linkedTurns.RemainingAgentsPerTurn, this.linkedTurns.CurrentAgent); */
+
+        this.Events.OnPassesChange(actorsPerPass, this.CurrentAgent);
     }
-
-    /* [SerializeField]
-    private int previewedAgentNb = 0;
-    private Turn linkedTurns = null;
-
-    public ITimelineAgent CurrentAgent => this.linkedTurns.CurrentAgent;
-    public float CurrentPriorityScore => this.linkedTurns.CurrentPriorityScore;*/
 }

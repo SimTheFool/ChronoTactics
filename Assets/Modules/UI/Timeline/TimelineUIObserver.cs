@@ -8,7 +8,7 @@ public class TimelineUIObserver : UIChildrenGenerator<TurnUIController>
     void Start()
     {
         this.timelineController = DependencyLocator.getTimelineController();
-        this.timelineController.Events.onTimelineChange += this.RenderTurns;
+        this.timelineController.Events.onPassesChange += this.RenderTurns;
     }
 
     private void RenderTurns(Dictionary<int, List<ITimelineAgent>> agentsPerTurn, ITimelineAgent agent)

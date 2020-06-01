@@ -7,67 +7,69 @@ public class Pass
     private Dictionary<ITimelineAgent, int> inputAgentsAtbs;
     private Dictionary<ITimelineAgent, int> outputAgentsAtbs;
 
-    private SortedSet<KeyValuePair<ITimelineAgent, float>> agentsPriorities;
-    private class CompareAgentPriorities : IComparer<KeyValuePair<ITimelineAgent, float>>
+    private SortedSet<(ITimelineAgent agent, float priorityScore)> agentsPriorityScores;
+    private class CompareAgentPriorityScores : IComparer<(ITimelineAgent agent, float priorityScore)>
     {
-        public int Compare(KeyValuePair<ITimelineAgent, float> p1, KeyValuePair<ITimelineAgent, float> p2)
+        public int Compare((ITimelineAgent agent, float priorityScore) p1, (ITimelineAgent agent, float priorityScore) p2)
         {
-            if(p1.Key == p2.Key && p1.Value == p2.Value) return 0;            
+            if(p1.agent == p2.agent && p1.priorityScore == p2.priorityScore) return 0;            
 
-            int result = p1.Value.CompareTo(p2.Value);
+            int result = p1.priorityScore.CompareTo(p2.priorityScore);
 
-            result = (result == 0) ? p2.Key.Speed.CompareTo(p1.Key.Speed) : result;
-            result = (result == 0) ? p1.Key.UniqId.CompareTo(p2.Key.UniqId) : result;
+            result = (result == 0) ? p2.agent.Speed.CompareTo(p1.agent.Speed) : result;
+            result = (result == 0) ? p1.agent.UniqId.groupId.CompareTo(p2.agent.UniqId.groupId) : result;
+            result = (result == 0) ? p1.agent.UniqId.selfId.CompareTo(p2.agent.UniqId.selfId) : result;
             return result;
         }
     }
 
-    // We set a default pair of Agent/Priority, in a such a way it's lower than any other pair which may exists. Indeed, this pair is used to find next one in the priorities sorted list.
-    private KeyValuePair<ITimelineAgent, float> currentAgentPriority = new KeyValuePair<ITimelineAgent, float>(null, -1);
-    private int turnNb = 0;
+    private (ITimelineAgent agent, float priorityScore) lowerAgentPriorityScore = (null, -1);
+    private (ITimelineAgent agent, float priorityScore) upperAgentPriorityScore = (null, 2);
+
+    private int passNb = 0;
     private Pass nextPass = null;
 
-    public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.GetRemainingAgentsPerTurn();
-    public int RemainingAgentsCount => this.RemainingAgentsPerTurn.Aggregate(0, (acc, elem) => acc += elem.Value.Count);
-    public ITimelineAgent CurrentAgent => this.currentAgentPriority.Key;
-    public float CurrentPriorityScore => this.currentAgentPriority.Value;
-
-    public Pass (Dictionary<ITimelineAgent, int> agentsAtbs, int turnNb)
+    public Pass (Dictionary<ITimelineAgent, int> agentsAtbs, int passNb)
     {
         this.inputAgentsAtbs = new Dictionary<ITimelineAgent, int>(agentsAtbs);
         this.outputAgentsAtbs = new Dictionary<ITimelineAgent, int>();
-        this.agentsPriorities = new SortedSet<KeyValuePair<ITimelineAgent, float>>(new CompareAgentPriorities());
-        this.turnNb = turnNb;
+        this.agentsPriorityScores = new SortedSet<(ITimelineAgent agent, float priorityScore)>(new CompareAgentPriorityScores());
+        this.passNb = passNb;
 
         foreach(ITimelineAgent agent in this.inputAgentsAtbs.Keys)
         {
-            this.EvaluatePriorities(agent);
+            this.EvaluatePriorityScores(agent);
         }
     }
 
-    private void EvaluatePriorities(ITimelineAgent agent)
+    private void EvaluatePriorityScores(ITimelineAgent agent)
     {
         int currentAtb = this.inputAgentsAtbs[agent];
         int finalAtb = currentAtb + agent.Speed;
         int canPlayNb = finalAtb / 100;
 
-        this.agentsPriorities.RemoveWhere((KeyValuePair<ITimelineAgent, float> priority) => {
-            return priority.Key == agent;
-        });
-
         for(int i = 1; i <= canPlayNb; i++)
         {
             float priority = ((i * 100) - currentAtb) / (float)agent.Speed;
-            this.agentsPriorities.Add(new KeyValuePair<ITimelineAgent, float>(agent, priority));
+            this.agentsPriorityScores.Add((agent, priority));
         }
         
         this.outputAgentsAtbs[agent] = finalAtb % 100;
     }
 
+    private void RemovePriorityScores(ITimelineAgent agent)
+    {
+        this.agentsPriorityScores.RemoveWhere(agentPriority => {
+            return agentPriority.agent == agent;
+        });
+    }
+
     public void AddOrUpdateAgent(ITimelineAgent agent, int atb)
     {
         this.inputAgentsAtbs[agent] = atb;
-        this.EvaluatePriorities(agent);
+
+        this.RemovePriorityScores(agent);
+        this.EvaluatePriorityScores(agent);
         
         if(this.nextPass == null)
             return;
@@ -79,9 +81,7 @@ public class Pass
     {
         this.inputAgentsAtbs.Remove(agent);
         this.outputAgentsAtbs.Remove(agent);
-        this.agentsPriorities.RemoveWhere((KeyValuePair<ITimelineAgent, float> agentPriority) => {
-            return agentPriority.Key == agent;
-        });
+        this.RemovePriorityScores(agent);
         
         if(this.nextPass == null)
             return;
@@ -89,25 +89,22 @@ public class Pass
         this.nextPass.RemoveAgent(agent);
     }
 
-    public void NewTurn()
+    public void NewPass()
     {
         if(this.outputAgentsAtbs.Count == 0)
             return;
 
         if(this.nextPass != null)
         {
-            this.nextPass.NewTurn();
+            this.nextPass.NewPass();
             return;
         }
             
-        this.nextPass = new Pass(this.outputAgentsAtbs, this.turnNb + 1);
+        this.nextPass = new Pass(this.outputAgentsAtbs, this.passNb + 1);
     }
 
-    public Pass MoveToNextTurn()
+    public Pass GetNextPass()
     {
-        if(this.nextPass == null || this.outputAgentsAtbs.Count <= 0)
-            return null;
-
         foreach(KeyValuePair<ITimelineAgent, int> agentAtb in this.outputAgentsAtbs)
         {
             agentAtb.Key.Atb = agentAtb.Value;
@@ -116,44 +113,48 @@ public class Pass
         return this.nextPass;
     }
 
-    public ITimelineAgent MoveToNextAgent()
+    public (ITimelineAgent agent, float priorityScore) GetAgentPriorityScoreNextTo(ITimelineAgent agent, float priorityScore)
     {
-        List<KeyValuePair<ITimelineAgent, float>> agentsPriorities = this.GetAllAgentPrioritiesAfterCurrent();
+        List<(ITimelineAgent agent, float priorityScore)> agentsPriorityScores = this.GetAllAgentsPriorityScoreNextTo(agent, priorityScore);
 
-        if(agentsPriorities.Count == 0) return null;
+        if(agentsPriorityScores.Count == 0)
+            return (null, -1);
 
-        this.currentAgentPriority = agentsPriorities[0];
-        return this.currentAgentPriority.Key;
+        (ITimelineAgent nextAgent, float nextPriorityScore) = agentsPriorityScores[0];
+        return (nextAgent, nextPriorityScore);
     }
 
-    private List<KeyValuePair<ITimelineAgent, float>> GetAllAgentPrioritiesAfterCurrent()
+    private List<(ITimelineAgent agent, float priorityScore)> GetAllAgentsPriorityScoreNextTo(ITimelineAgent agent, float priorityScore)
     {
-        List<KeyValuePair<ITimelineAgent, float>> result = new List<KeyValuePair<ITimelineAgent, float>>();
-        KeyValuePair<ITimelineAgent, float> upperAgentPriority = new KeyValuePair<ITimelineAgent, float>(null, 1.1f);
+        List<(ITimelineAgent agent, float priorityScore)> result = new List<(ITimelineAgent agent, float priorityScore)>();
 
-        result = this.agentsPriorities.GetViewBetween(this.currentAgentPriority, upperAgentPriority).ToList();
-        result.Remove(this.currentAgentPriority);
+        (ITimelineAgent agent, float priorityScore) lower = (agent == null) ? this.lowerAgentPriorityScore : (agent, priorityScore);
+
+        result = this.agentsPriorityScores.GetViewBetween(lower, this.upperAgentPriorityScore).ToList();
+        result.Remove((agent, priorityScore));
 
         return result;
     }
 
-    private Dictionary<int, List<ITimelineAgent>> GetRemainingAgentsPerTurn()
+    public Dictionary<int, List<ITimelineAgent>> GetActorsPerPassNextTo(ITimelineAgent agent, float priorityScore)
     {
-        Dictionary<int, List<ITimelineAgent>> agentsPerTurn = new Dictionary<int, List<ITimelineAgent>>();
-        List<ITimelineAgent> agents = this.GetAllAgentPrioritiesAfterCurrent().Select((KeyValuePair<ITimelineAgent, float> agentPriority) => {
-            return agentPriority.Key;
-        }).ToList();
+        Dictionary<int, List<ITimelineAgent>> result = new Dictionary<int, List<ITimelineAgent>>();
 
-        agentsPerTurn[this.turnNb] = agents;
+        List<ITimelineAgent> actors = this.GetAllAgentsPriorityScoreNextTo(agent, priorityScore)
+            .Select(pair => pair.agent)
+            .Where(agentActor => agentActor.agentType == TimelineAgentType.Actor)
+            .ToList();
+            
+        result[this.passNb] = actors;
 
         if(this.nextPass == null)
-            return agentsPerTurn;
+            return result;
 
-        foreach(KeyValuePair<int, List<ITimelineAgent>> kvp in this.nextPass.GetRemainingAgentsPerTurn())
+        foreach(KeyValuePair<int, List<ITimelineAgent>> kvp in this.nextPass.GetActorsPerPassNextTo(null, priorityScore))
         {
-            agentsPerTurn[kvp.Key] = kvp.Value;
+            result[kvp.Key] = kvp.Value;
         }
 
-        return agentsPerTurn;
+        return result;
     }
 }
