@@ -2,9 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Turn
+public class Pass
 {
-
     private Dictionary<ITimelineAgent, int> inputAgentsAtbs;
     private Dictionary<ITimelineAgent, int> outputAgentsAtbs;
 
@@ -26,14 +25,14 @@ public class Turn
     // We set a default pair of Agent/Priority, in a such a way it's lower than any other pair which may exists. Indeed, this pair is used to find next one in the priorities sorted list.
     private KeyValuePair<ITimelineAgent, float> currentAgentPriority = new KeyValuePair<ITimelineAgent, float>(null, -1);
     private int turnNb = 0;
-    private Turn nextTurn = null;
+    private Pass nextPass = null;
 
     public Dictionary<int, List<ITimelineAgent>> RemainingAgentsPerTurn => this.GetRemainingAgentsPerTurn();
     public int RemainingAgentsCount => this.RemainingAgentsPerTurn.Aggregate(0, (acc, elem) => acc += elem.Value.Count);
     public ITimelineAgent CurrentAgent => this.currentAgentPriority.Key;
     public float CurrentPriorityScore => this.currentAgentPriority.Value;
 
-    public Turn (Dictionary<ITimelineAgent, int> agentsAtbs, int turnNb)
+    public Pass (Dictionary<ITimelineAgent, int> agentsAtbs, int turnNb)
     {
         this.inputAgentsAtbs = new Dictionary<ITimelineAgent, int>(agentsAtbs);
         this.outputAgentsAtbs = new Dictionary<ITimelineAgent, int>();
@@ -70,10 +69,10 @@ public class Turn
         this.inputAgentsAtbs[agent] = atb;
         this.EvaluatePriorities(agent);
         
-        if(this.nextTurn == null)
+        if(this.nextPass == null)
             return;
 
-        this.nextTurn.AddOrUpdateAgent(agent, this.outputAgentsAtbs[agent]);
+        this.nextPass.AddOrUpdateAgent(agent, this.outputAgentsAtbs[agent]);
     }
 
     public void RemoveAgent(ITimelineAgent agent)
@@ -84,10 +83,10 @@ public class Turn
             return agentPriority.Key == agent;
         });
         
-        if(this.nextTurn == null)
+        if(this.nextPass == null)
             return;
 
-        this.nextTurn.RemoveAgent(agent);
+        this.nextPass.RemoveAgent(agent);
     }
 
     public void NewTurn()
@@ -95,18 +94,18 @@ public class Turn
         if(this.outputAgentsAtbs.Count == 0)
             return;
 
-        if(this.nextTurn != null)
+        if(this.nextPass != null)
         {
-            this.nextTurn.NewTurn();
+            this.nextPass.NewTurn();
             return;
         }
             
-        this.nextTurn = new Turn(this.outputAgentsAtbs, this.turnNb + 1);
+        this.nextPass = new Pass(this.outputAgentsAtbs, this.turnNb + 1);
     }
 
-    public Turn MoveToNextTurn()
+    public Pass MoveToNextTurn()
     {
-        if(this.nextTurn == null || this.outputAgentsAtbs.Count <= 0)
+        if(this.nextPass == null || this.outputAgentsAtbs.Count <= 0)
             return null;
 
         foreach(KeyValuePair<ITimelineAgent, int> agentAtb in this.outputAgentsAtbs)
@@ -114,7 +113,7 @@ public class Turn
             agentAtb.Key.Atb = agentAtb.Value;
         }
 
-        return this.nextTurn;
+        return this.nextPass;
     }
 
     public ITimelineAgent MoveToNextAgent()
@@ -147,10 +146,10 @@ public class Turn
 
         agentsPerTurn[this.turnNb] = agents;
 
-        if(this.nextTurn == null)
+        if(this.nextPass == null)
             return agentsPerTurn;
 
-        foreach(KeyValuePair<int, List<ITimelineAgent>> kvp in this.nextTurn.GetRemainingAgentsPerTurn())
+        foreach(KeyValuePair<int, List<ITimelineAgent>> kvp in this.nextPass.GetRemainingAgentsPerTurn())
         {
             agentsPerTurn[kvp.Key] = kvp.Value;
         }

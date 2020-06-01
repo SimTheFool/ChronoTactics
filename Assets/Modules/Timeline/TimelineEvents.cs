@@ -5,7 +5,32 @@ using System;
 public class TimelineEvents : TimelineComponentsBridge
 {
     private HashSet<Action> eventQueue = new HashSet<Action>();
-    public void Process()
+
+    public event Action<Dictionary<int, List<ITimelineAgent>>, ITimelineAgent> onPassesChange;
+    public void OnPassesChange(Dictionary<int, List<ITimelineAgent>> remainingAgentsPerPass, ITimelineAgent currentAgent)
+    {
+        this.eventQueue.Add(() => {
+            this.onPassesChange?.Invoke(remainingAgentsPerPass, currentAgent);
+        });
+    }
+
+    public event Action<IEnumerable<ITimelineAgent>> onTurnBreaksChange;
+    public void OnTurnBreaksChange(IEnumerable<ITimelineAgent> remainingTurnBreaks)
+    {
+        this.eventQueue.Add(() => {
+            this.onTurnBreaksChange?.Invoke(remainingTurnBreaks);
+        });
+    }
+
+    public event Action<float> onTimerChange;
+    public void OnTimerChange(float timer)
+    {
+        this.eventQueue.Add(() => {
+            this.onTimerChange?.Invoke(timer);
+        });
+    }
+
+    public void Update()
     {
         if(this.eventQueue.Count <= 0)
             return;
@@ -16,29 +41,5 @@ public class TimelineEvents : TimelineComponentsBridge
         }
 
         this.eventQueue.Clear();
-    }
-
-    public event Action<Dictionary<int, List<ITimelineAgent>>, ITimelineAgent> onTimelineChange;
-    public void OnTimelineChange(Dictionary<int, List<ITimelineAgent>> remainingAgentsPerTurn, ITimelineAgent currentAgent)
-    {
-        this.eventQueue.Add(() => {
-            this.onTimelineChange?.Invoke(remainingAgentsPerTurn, currentAgent);
-        });
-    }
-
-    /* public event Action<ITimelineAgent> onAgentChange;
-    public void OnAgentChange(ITimelineAgent newAgent)
-    {
-        this.eventQueue.Add(() => {
-            this.onAgentChange?.Invoke(newAgent);
-        });
-    } */
-
-    public event Action<float> onTimerChange;
-    public void OnTimerChange(float timer)
-    {
-        this.eventQueue.Add(() => {
-            this.onTimerChange?.Invoke(timer);
-        });
     }
 }

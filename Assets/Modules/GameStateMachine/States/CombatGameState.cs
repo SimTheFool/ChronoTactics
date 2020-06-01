@@ -43,11 +43,7 @@ public class CombatGameState : IGameState
 
     public void Process()
     {
-        bool combatEnded = this.timelineController.Process();
-        this.skillQueueResolver.Process();
 
-
-        if(combatEnded) this.gameStateMachine.SetMenuState();
     }
 
     public void Out()

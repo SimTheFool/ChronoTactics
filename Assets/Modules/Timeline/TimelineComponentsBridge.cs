@@ -1,28 +1,28 @@
 using UnityEngine;
 
-[RequireComponent(typeof(TurnsManager), typeof(BreaksManager), typeof(TimelineEvents))]
+[RequireComponent(typeof(PassesManager), typeof(TurnBreaksManager), typeof(TimelineEvents))]
 [RequireComponent(typeof(TimelineController))]
 public class TimelineComponentsBridge : MonoBehaviour
 {
-    private TurnsManager turns = null;
-    protected TurnsManager Turns
+    private PassesManager passes = null;
+    protected PassesManager Passes
     {
         get
         {
-            if(this.turns == null)
-                this.turns = this.GetComponent<TurnsManager>();
-            return this.turns;
+            if(this.passes == null)
+                this.passes = this.GetComponent<PassesManager>();
+            return this.passes;
         }
     }
 
-    private BreaksManager breaks = null;
-    protected BreaksManager Breaks
+    private TurnBreaksManager turnBreaks = null;
+    protected TurnBreaksManager TurnBreaks
     {
         get
         {
-            if(this.breaks == null)
-                this.breaks = this.GetComponent<BreaksManager>();
-            return this.breaks;
+            if(this.turnBreaks == null)
+                this.turnBreaks = this.GetComponent<TurnBreaksManager>();
+            return this.turnBreaks;
         }
     }
 

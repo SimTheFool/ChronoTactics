@@ -6,79 +6,67 @@ public class TimelineController : TimelineComponentsBridge
     new public TimelineEvents Events => base.Events;
 
     [SerializeField]
-    private int secondsPerAgent = 20;
+    private int secondsPerPass = 20;
+    public int SecondsPerPass
+    {
+        get => this.secondsPerPass;
+        set => this.secondsPerPass = value;
+    }
 
-    private float timer = 0;
-    private bool isPlaying = false;
-    private ITimelineAgent currentAgent = null;
-    
-    public ITimelineAgent CurrentAgent => this.Turns.CurrentAgent;
-    public float CurrentPriorityScore => this.Turns.CurrentPriorityScore;
+    private TimelineState state = null;
+    private PassesManagementState passesManagementState = null;
+    private TurnBreaksManagementState turnBreaksManagementState = null;
 
     public void Init(List<ITimelineAgent> agents)
     {
-        this.timer = 0;
-        this.Turns.Init(agents);
-        this.Play();
+        this.Passes.Init(agents);
+
+        this.passesManagementState = new PassesManagementState(this, this.Passes, this.TurnBreaks);
+        this.turnBreaksManagementState = new TurnBreaksManagementState(this, this.TurnBreaks);
+        this.SetPassesManagementState();
     }
 
-    public bool Process()
+    public void Update()
     {
-        bool result = this.PlayCurrentTurn();
-        this.ProcessEvents();
-        return result;
+        this.state.Process();
     }
 
-    private bool PlayCurrentTurn()
+    private void SetState(TimelineState state)
     {
-        if(this.isPlaying)
-        {
-            this.timer -= Time.deltaTime;
-            this.Events.OnTimerChange(this.timer);
-        }
-        
-        if(timer > 0) return false;
-
-        ITimelineAgent nextAgent = this.Turns.GetNextAgent();
-
-        if(nextAgent == null)
-            return true;
-
-        this.timer = this.secondsPerAgent;
-        this.currentAgent?.OnEndPass();
-        this.currentAgent = nextAgent;
-        this.currentAgent.OnBeginPass();
-        
-        return false;
+        this.state?.Exit();
+        this.state = state;
+        this.state?.Enter();
     }
 
-    private void ProcessEvents()
+    public void SetTurnBreaksManagementState()
     {
-        this.Events.Process();
+        this.SetState(this.turnBreaksManagementState);
     }
 
-    public void Play()
+    public void SetPassesManagementState()
     {
-        this.isPlaying = true;
-    }
-
-    public void Pause()
-    {
-        this.isPlaying = false;
+        this.SetState(this.passesManagementState);
     }
 
     public void EndPass()
     {
-        this.timer = -1;
+        this.state.EndTurn();
     }
 
-    public void AddOrUpdateAgent(ITimelineAgent agent)
+    public void AddAgentInPasses(ITimelineAgent agent)
     {
-        this.Turns.AddOrUpdateAgent(agent);
+        this.Passes.Add(agent);
+    }
+
+    public void AddAgentTurnBreak(ITimelineAgent agent)
+    {
+        this.TurnBreaks.Add(agent);
+        this.SetTurnBreaksManagementState();
     }
 
     public void RemoveAgent(ITimelineAgent agent)
     {
-        this.Turns.RemoveAgent(agent);
+        this.Passes.Remove(agent);
+        this.TurnBreaks.Remove(agent);
     }
 }
