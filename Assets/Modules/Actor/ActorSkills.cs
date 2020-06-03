@@ -6,7 +6,7 @@ public class ActorSkills : BaseActor
     private void Awake() {
         this.move = new NativeMoveSkill();
         this.endTurn = new NativeEndPassSkill();
-        this.others = new List<Skill>(){new LoggingEffectSkill()};
+        this.others = new List<Skill>(){new GiveTurnBreakSkill()};
     }
 
     public List<Skill> All

@@ -21,11 +21,11 @@ public class TurnBreaksManager : TimelineComponentsBridge, ITimelineAgentsCollec
 
     private LinkedList<TimerAgentPair> turnBreaks = new LinkedList<TimerAgentPair>();
 
-    public ITimelineAgent CurrentAgent => this.turnBreaks.First().agent;
+    public ITimelineAgent CurrentAgent => this.turnBreaks.First?.Value.agent;
     public float CurrentTimer
     {
-        get => this.turnBreaks.First().timer;
-        set => this.turnBreaks.First().timer = value;
+        get => this.turnBreaks.First.Value.timer;
+        set => this.turnBreaks.First.Value.timer = value;
     }
 
     public void MoveToNextAgent()

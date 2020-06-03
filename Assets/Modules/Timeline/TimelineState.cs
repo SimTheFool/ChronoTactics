@@ -23,11 +23,16 @@ public abstract class TimelineState
             return;
 
         this.CurrentAgent?.OnEndPass();
+        
         this.MoveToNextAgent();
-        this.CurrentAgent?.OnBeginPass();
-
         if(this.CurrentAgent == null)
+        {
             this.OnNextAgentNull();
+            return;
+        }
+
+        this.CurrentAgent?.OnBeginPass();
+            
     }
 
     public void EndTurn() => this.Timer = -1;
