@@ -16,12 +16,12 @@ public class LoggingSkill : Skill
 
         Func<SkillProcess, DisplayWordProcess> onDoubleWord_DisplayWord = (parentProcess) => {
             DoubleWordProcess comp = (DoubleWordProcess)parentProcess;
-            return new DisplayWordProcess(comp.OutputWord);
+            return new DisplayWordProcess(comp.outputWord);
         };
 
         Func<SkillProcess, DoubleWordProcess> onDoubleWord_DoubleWord = (parentProcess) => {
             DoubleWordProcess comp = (DoubleWordProcess)parentProcess;
-            return new DoubleWordProcess(comp.OutputWord);
+            return new DoubleWordProcess(comp.outputWord);
         };
 
         composite

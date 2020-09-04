@@ -1,8 +1,10 @@
 using UnityEngine;
 
+[SkillGraphNode]
 public class DisplayWordProcess : SkillProcess
 {
-    private string wordToDisplay = null;
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Input)]
+    public string wordToDisplay = null;
 
     public DisplayWordProcess(string word)
     {

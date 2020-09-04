@@ -2,12 +2,14 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[SkillGraphNode]
 public class DoubleWordProcess :  SkillProcess
 {
-    private string word = "";
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Input)]
+    public string word = "";
 
-    private string outputWord = "";
-    public string OutputWord => this.outputWord;
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Output)]
+    public string outputWord = "";
 
     private int count = 0;
 

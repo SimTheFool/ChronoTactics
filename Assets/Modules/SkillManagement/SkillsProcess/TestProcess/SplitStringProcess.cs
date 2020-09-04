@@ -1,11 +1,16 @@
 using UnityEngine;
 using System.Linq;
 
+[SkillGraphNode]
 public class SplitStringProcess : SkillProcess
 {
-    private string str = "";
-    private char separator = '.';
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Input)]
+    public string str = "";
 
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Input)]
+    public char separator = '.';
+
+    [SkillGraphPort(SkillGraphPortAttribute.Direction.Output)]
     public string[] words;
 
     public SplitStringProcess(string str, char separator)
