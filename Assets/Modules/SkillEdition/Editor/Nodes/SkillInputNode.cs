@@ -5,8 +5,10 @@ using System;
 
 public class SkillInputNode : SkillGraphNode
 {
-    public SkillInputNode()
+    public SkillInputNode() : base()
     {
+        this.id = new Guid();
+        
         this.title = "Input";
 
         this.AddOutputPort("Caster", typeof(ActorFacade));
@@ -22,5 +24,10 @@ public class SkillInputNode : SkillGraphNode
     public override bool IsAscendable()
     {
         return false;
+    }
+
+    public override SkillProcessDatas GetSkillProcessDatas()
+    {
+        return null;
     }
 }

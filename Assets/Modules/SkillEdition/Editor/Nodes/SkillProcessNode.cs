@@ -8,13 +8,16 @@ using UnityEngine;
 
 public class SkillProcessNode : SkillGraphNode
 {
-    public SkillProcessNode(Type type)
+    public SkillProcessNode(Type compositeType) : base()
     {
-        this.title = type.ToString();
+        this.processType  = compositeType;
+        this.nodeType = SkillGraphNodeType.Composite;
+
+        this.title = this.processType.ToString();
 
         Dictionary<SkillGraphPortAttribute.Direction, IEnumerable<(string name, Type type, SkillGraphPortAttribute portAttribute)>> portsInfosPerDirections;
 
-        portsInfosPerDirections = type.GetFields()
+        portsInfosPerDirections = this.processType.GetFields()
             .Select(fieldInfo => {
                 (string name, Type type, SkillGraphPortAttribute portAttribute) result;
 
@@ -37,5 +40,34 @@ public class SkillProcessNode : SkillGraphNode
                 addPort(infos.name, infos.type);
             }
         }
+    }
+
+    public override SkillProcessDatas GetSkillProcessDatas()
+    {
+        SkillProcessDatas processDatas = new SkillProcessDatas();
+
+        processDatas.Id = this.id.ToString();
+        processDatas.ProcessType = this.processType.ToString();
+        processDatas.Position = new Vector2(this.GetPosition().x, this.GetPosition().y);
+
+        List<Port> inputPorts = this.ports.Where(port => port.direction == Direction.Input).ToList();
+
+        List<(string inputName, string connectedOutputName, string connectedNodeId)> inputsDatas = new List<(string inputName, string connectedOutputName, string connectedNodeId)>();
+
+        foreach(Port input in inputPorts)
+        {
+            (string inputName, string connectedOutputName, string connectedNodeId) inputDatas;
+            Port output = input.connections.First().output;
+
+            inputDatas.inputName = input.portName;
+            inputDatas.connectedOutputName = output.portName;
+            inputDatas.connectedNodeId = ((SkillGraphNode)output.node).Id.ToString();
+
+            inputsDatas.Add(inputDatas);
+        }
+
+        processDatas.InputsDatas = inputsDatas.AsEnumerable();
+
+        return processDatas;
     }
 }

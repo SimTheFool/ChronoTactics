@@ -51,4 +51,13 @@ public class SkillGraph :  GraphView
 
         return compatiblePorts;
     }
+
+    public void GetGraphData()
+    {
+        this.nodes.ForEach(n => {
+            SkillGraphNode node = n as SkillGraphNode;
+            if(node != null)
+                node.GetSkillProcessDatas();
+        });
+    }
 }
