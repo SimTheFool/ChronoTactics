@@ -1,4 +1,4 @@
-public class NativeEndPassSkill : Skill
+public class NativeEndPassSkill : OldSkill
 {
     public NativeEndPassSkill() : base(null, "End")
     {

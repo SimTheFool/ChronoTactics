@@ -1,4 +1,4 @@
-public class NativeMoveSkill : Skill
+public class NativeMoveSkill : OldSkill
 {
     public NativeMoveSkill() : base(null, "Move")
     {

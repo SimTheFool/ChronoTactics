@@ -1,4 +1,4 @@
-public class LoggingEffectSkill : Skill
+public class LoggingEffectSkill : OldSkill
 {
     public LoggingEffectSkill() : base(null, "LoggingEffect")
     {

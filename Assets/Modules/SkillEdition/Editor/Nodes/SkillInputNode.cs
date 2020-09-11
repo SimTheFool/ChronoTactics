@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor.Experimental.GraphView;
 using System;
+using System.Collections.Generic;
 
 public class SkillInputNode : SkillGraphNode
 {
@@ -26,7 +27,12 @@ public class SkillInputNode : SkillGraphNode
         return false;
     }
 
-    public override SkillProcessDatas GetSkillProcessDatas()
+    public override SkillProcessDatas GetSkillProcessDatasFromNode()
+    {
+        return null;
+    }
+
+    public override IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
     {
         return null;
     }

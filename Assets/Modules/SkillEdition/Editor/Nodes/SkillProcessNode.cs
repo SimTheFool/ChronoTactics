@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class SkillProcessNode : SkillGraphNode
 {
-    public SkillProcessNode(Type compositeType) : base()
+    public SkillProcessNode(Type compositeType, Guid id = default(Guid)) : base()
     {
         this.processType  = compositeType;
-        this.nodeType = SkillGraphNodeType.Composite;
+        this.id = (id == default(Guid)) ? Guid.NewGuid() : id;
 
         this.title = this.processType.ToString();
 
@@ -42,13 +42,14 @@ public class SkillProcessNode : SkillGraphNode
         }
     }
 
-    public override SkillProcessDatas GetSkillProcessDatas()
+    public override SkillProcessDatas GetSkillProcessDatasFromNode()
     {
         SkillProcessDatas processDatas = new SkillProcessDatas();
 
         processDatas.Id = this.id.ToString();
         processDatas.ProcessType = this.processType.ToString();
-        processDatas.Position = new Vector2(this.GetPosition().x, this.GetPosition().y);
+        Rect rect = this.GetPosition();
+        processDatas.Position = new Vector4(rect.x, rect.y, rect.width, rect.height);
 
         List<Port> inputPorts = this.ports.Where(port => port.direction == Direction.Input).ToList();
 
@@ -57,17 +58,42 @@ public class SkillProcessNode : SkillGraphNode
         foreach(Port input in inputPorts)
         {
             (string inputName, string connectedOutputName, string connectedNodeId) inputDatas;
-            Port output = input.connections.First().output;
+            Port output = input.connections.FirstOrDefault()?.output;
 
             inputDatas.inputName = input.portName;
-            inputDatas.connectedOutputName = output.portName;
-            inputDatas.connectedNodeId = ((SkillGraphNode)output.node).Id.ToString();
+            inputDatas.connectedOutputName = output?.portName;
+            inputDatas.connectedNodeId = (output != null) ? ((SkillGraphNode)output?.node).Id.ToString() : null;
 
             inputsDatas.Add(inputDatas);
         }
 
-        processDatas.InputsDatas = inputsDatas.AsEnumerable();
+        processDatas.InputsDatas = inputsDatas;
 
         return processDatas;
+    }
+
+    public override IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
+    {
+        List<Edge> edges = new List<Edge>();
+
+        this.SetPosition(new Rect(datas.Position.x, datas.Position.y, datas.Position.y, datas.Position.z));
+
+        foreach((string inputName, string connectedOutputName, string connectedNodeId) in datas.InputsDatas)
+        {
+            Port inputPort = this.ports.FirstOrDefault(port => port.portName == inputName);
+
+            Guid tempGuid;
+            if(!Guid.TryParse(connectedNodeId, out tempGuid))
+                continue;
+
+            Port outputPort = nodeRegistry[tempGuid]?.Ports.FirstOrDefault(port => port.portName == connectedOutputName);
+
+            if(outputPort == null)
+                continue;
+
+            edges.Add(inputPort.ConnectTo(outputPort));
+        }
+
+        return edges.AsEnumerable();
     }
 }

@@ -16,8 +16,6 @@ public class SkillGraph :  GraphView
         this.AddManipulator(new ContentZoomer());
 
         this.StretchToParentSize();
-
-        this.AddElement(new SkillInputNode());
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -52,12 +50,51 @@ public class SkillGraph :  GraphView
         return compatiblePorts;
     }
 
-    public void GetGraphData()
+    public List<SkillProcessDatas> GetSkillDatasFromNodes()
     {
+        List<SkillProcessDatas> skillDatas = new List<SkillProcessDatas>();
+
         this.nodes.ForEach(n => {
             SkillGraphNode node = n as SkillGraphNode;
             if(node != null)
-                node.GetSkillProcessDatas();
+                skillDatas.Add(node.GetSkillProcessDatasFromNode());
         });
+
+        return skillDatas;
+    }
+
+    public void SetNodesFromSkillDatas(IEnumerable<SkillProcessDatas> skillDatas)
+    {
+        if(skillDatas == null)
+            return;
+
+        Dictionary<Guid, SkillGraphNode>  nodeRegistry = new Dictionary<Guid, SkillGraphNode>();
+        List<(SkillProcessNode node, SkillProcessDatas datas)> nodesToDatas = new List<(SkillProcessNode node, SkillProcessDatas datas)>();
+
+        foreach(SkillProcessDatas datas in skillDatas)
+        {
+            Type type = Assembly.GetAssembly(typeof(SkillProcess)).GetType(datas.ProcessType);
+
+            if(type == null)
+                continue;
+
+            Guid id = Guid.Parse(datas.Id);
+
+            SkillProcessNode node = new SkillProcessNode(type, id);
+            this.AddElement(node);
+
+            nodeRegistry.Add(id, node);
+            nodesToDatas.Add((node, datas));
+        }
+
+        foreach((SkillProcessNode node, SkillProcessDatas datas) in nodesToDatas)
+        {
+            IEnumerable<Edge> edges = node.SetNodeFromSkillProcessDatas(datas, nodeRegistry);
+
+            foreach (Edge edge in edges)
+            {
+                this.AddElement(edge);
+            }
+        }
     }
 }

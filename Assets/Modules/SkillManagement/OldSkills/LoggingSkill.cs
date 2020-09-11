@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public class LoggingSkill : Skill
+public class LoggingSkill : OldSkill
 {
     public LoggingSkill() : base(null, "Logging")
     {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class GiveTurnBreakSkill : Skill
+public class GiveTurnBreakSkill : OldSkill
 {
     public GiveTurnBreakSkill() : base(null, "Give Turn Break")
     {

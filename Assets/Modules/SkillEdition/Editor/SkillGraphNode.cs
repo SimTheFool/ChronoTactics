@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor.Experimental.GraphView;
@@ -7,19 +8,13 @@ public enum SkillGraphNodeType {Composite, Input};
 
 public abstract class SkillGraphNode : Node
 {
-    protected Guid id = new Guid();
+    protected Guid id;
     public Guid Id => this.id;
 
-    protected Type processType;
-    protected SkillGraphNodeType nodeType;
+    protected Type processType = null;
     
-
     protected List<Port> ports = new List<Port>();
-
-    public SkillGraphNode()
-    {
-        this.processType = null;
-    }
+    public IEnumerable<Port> Ports => this.ports.AsEnumerable();
 
     protected void AddOutputPort(string portName, Type type)
     {
@@ -49,5 +44,7 @@ public abstract class SkillGraphNode : Node
         this.RefreshPorts();
     }
 
-    public abstract SkillProcessDatas GetSkillProcessDatas();
+    public abstract SkillProcessDatas GetSkillProcessDatasFromNode();
+
+    public abstract IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry);
 }
