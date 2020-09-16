@@ -8,6 +8,8 @@ using System.Collections.Generic;
 
 public class SkillGraph :  GraphView
 {
+    private SkillInputNode entrypoint = null;
+
     public SkillGraph()
     {
         this.AddManipulator(new ContentDragger());
@@ -16,6 +18,9 @@ public class SkillGraph :  GraphView
         this.AddManipulator(new ContentZoomer());
 
         this.StretchToParentSize();
+
+        this.entrypoint = new SkillInputNode();
+        this.AddElement(this.entrypoint);
     }
 
     public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -27,15 +32,33 @@ public class SkillGraph :  GraphView
 
         foreach(SkillGraphNodeAttribute.NodeTag tag in tagsToProcesses.Keys)
         {
-            evt.menu.AppendSeparator();
-            evt.menu.AppendAction(tag.ToString(), (dropdownMenuAction) => Debug.Log("Label"), DropdownMenuAction.Status.Disabled);
-            evt.menu.AppendSeparator();
-
             foreach(Type type in tagsToProcesses[tag])
             {
-                evt.menu.AppendAction(type.ToString(), (dropdownMenuAction) => this.AddElement(new SkillProcessNode(type)), DropdownMenuAction.Status.Normal);
+                evt.menu.AppendAction($"{tag.ToString()}/{type.ToString()}", (dropdownMenuAction) => this.CreateSkillProcess(type : type, position : dropdownMenuAction.eventInfo.localMousePosition), DropdownMenuAction.Status.Normal);
             }
         }
+    }
+
+    private SkillProcessNode CreateSkillProcess(Type type, Guid id = default(Guid), Vector2 position = new Vector2())
+    {
+        SkillProcessNode node = new SkillProcessNode(type, id);
+        Rect rect = node.GetPosition();
+        rect.x = position.x;
+        rect.y = position.y;
+        node.SetPosition(rect);
+        this.AddElement(node);
+
+        return node;
+    }
+
+    private SkillInputNode CreateEntryPoint(Guid id = default(Guid))
+    {
+        SkillInputNode newEntrypoint = new SkillInputNode(id);
+        this.RemoveElement(this.entrypoint);
+        this.entrypoint = newEntrypoint;
+        this.AddElement(this.entrypoint);
+
+        return newEntrypoint;
     }
 
     public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -50,50 +73,74 @@ public class SkillGraph :  GraphView
         return compatiblePorts;
     }
 
-    public List<SkillProcessDatas> GetSkillDatasFromNodes()
+    public List<SkillNodeDatas> GetSkillDatasFromNodes()
     {
-        List<SkillProcessDatas> skillDatas = new List<SkillProcessDatas>();
+        List<SkillNodeDatas> skillDatas = new List<SkillNodeDatas>();
 
         this.nodes.ForEach(n => {
             SkillGraphNode node = n as SkillGraphNode;
             if(node != null)
-                skillDatas.Add(node.GetSkillProcessDatasFromNode());
+                skillDatas.Add(node.GetDatasFromNode());
         });
 
         return skillDatas;
     }
 
-    public void SetNodesFromSkillDatas(IEnumerable<SkillProcessDatas> skillDatas)
+    public void SetNodesFromSkillDatas(IEnumerable<SkillNodeDatas> skillDatas)
     {
         if(skillDatas == null)
             return;
 
         Dictionary<Guid, SkillGraphNode>  nodeRegistry = new Dictionary<Guid, SkillGraphNode>();
-        List<(SkillProcessNode node, SkillProcessDatas datas)> nodesToDatas = new List<(SkillProcessNode node, SkillProcessDatas datas)>();
+        List<(SkillGraphNode node, SkillNodeDatas datas)> nodesToDatas = new List<(SkillGraphNode node, SkillNodeDatas datas)>();
 
-        foreach(SkillProcessDatas datas in skillDatas)
+        foreach(SkillNodeDatas datas in skillDatas)
         {
-            Type type = Assembly.GetAssembly(typeof(SkillProcess)).GetType(datas.ProcessType);
+            Guid id = Guid.Parse(datas.Id);
+            SkillGraphNode node;
 
-            if(type == null)
+            switch(datas.NodeType)
+            {
+                case NodeType.EntryPoint:
+                    node = this.CreateEntryPoint();
+                    break;
+
+                case NodeType.Process:
+                    Type type = Assembly.GetAssembly(typeof(SkillProcess)).GetType(datas.ProcessType);
+                    if(type == null)
+                        continue;
+                    node = this.CreateSkillProcess(type: type, id: id);
+                    break;
+
+                default:
+                    node = null;
+                    break;
+            }
+
+            if(node == null)
                 continue;
 
-            Guid id = Guid.Parse(datas.Id);
-
-            SkillProcessNode node = new SkillProcessNode(type, id);
             this.AddElement(node);
 
             nodeRegistry.Add(id, node);
             nodesToDatas.Add((node, datas));
         }
 
-        foreach((SkillProcessNode node, SkillProcessDatas datas) in nodesToDatas)
+        foreach((SkillGraphNode node, SkillNodeDatas datas) in nodesToDatas)
         {
-            IEnumerable<Edge> edges = node.SetNodeFromSkillProcessDatas(datas, nodeRegistry);
+            IEnumerable<Edge> edges = node.SetNodeFromDatas(datas, nodeRegistry);
 
             foreach (Edge edge in edges)
             {
-                this.AddElement(edge);
+                if(this.GetCompatiblePorts(edge.input, null).Any(port => port == edge.output))
+                {
+                    this.AddElement(edge);
+                }
+                else
+                {
+                    edge.input.Disconnect(edge);
+                    edge.output.Disconnect(edge);
+                }
             }
         }
     }

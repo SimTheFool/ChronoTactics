@@ -6,11 +6,12 @@ using System.Collections.Generic;
 
 public class SkillInputNode : SkillGraphNode
 {
-    public SkillInputNode() : base()
-    {
-        this.id = new Guid();
-        
-        this.title = "Input";
+    public SkillInputNode(Guid id = default(Guid)) : base(id)
+    {        
+        this.nodeType = NodeType.EntryPoint;
+        this.processType  = null;
+
+        this.title = "ENTRYPOINT";
 
         this.AddOutputPort("Caster", typeof(ActorFacade));
         this.AddOutputPort("Target tile", typeof(TileFacade));
@@ -27,13 +28,19 @@ public class SkillInputNode : SkillGraphNode
         return false;
     }
 
-    public override SkillProcessDatas GetSkillProcessDatasFromNode()
+    public override SkillNodeDatas GetDatasFromNode()
     {
-        return null;
+        SkillNodeDatas entrypointDatas = new SkillNodeDatas();
+
+        entrypointDatas.Id = this.id.ToString();
+        entrypointDatas.ProcessType = null;
+        entrypointDatas.NodeType = NodeType.EntryPoint;
+
+        return entrypointDatas;
     }
 
-    public override IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
+    public override IEnumerable<Edge> SetNodeFromDatas(SkillNodeDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
     {
-        return null;
+        return new List<Edge>();
     }
 }

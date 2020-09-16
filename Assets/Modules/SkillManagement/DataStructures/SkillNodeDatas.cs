@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NodeType {EntryPoint, Process};
 
 [System.Serializable]
-public class SkillProcessDatas : ISerializationCallbackReceiver
+public class SkillNodeDatas : ISerializationCallbackReceiver
 {
     public string Id;
     public string ProcessType;
+    public NodeType NodeType;
     public Vector4 Position;
     public List<(string inputName, string connectedOutputName, string connectedNodeId)> InputsDatas = new List<(string inputName, string connectedOutputName, string connectedNodeId)>();
 

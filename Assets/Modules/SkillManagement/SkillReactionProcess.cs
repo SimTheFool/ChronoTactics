@@ -14,8 +14,8 @@ public abstract class SkillReactionProcess<TWatchedElement> : SkillProcess where
 
     public SkillReactionProcess(TWatchedElement watchedElement, SkillInput skillInput, string skillLabel, Func<SkillInput, SkillComposite> buildSkillCbk)
     {
-        Skill skill = new Skill(buildSkillCbk, skillLabel);
-        this.Init(watchedElement, skillInput, skill);
+        /* Skill skill = new Skill(buildSkillCbk, skillLabel);
+        this.Init(watchedElement, skillInput, skill); */
     }
 
     private void Init(TWatchedElement watchedElement, SkillInput skillInput, Skill skill)

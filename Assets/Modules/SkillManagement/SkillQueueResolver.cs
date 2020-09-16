@@ -16,28 +16,29 @@ public class SkillQueueResolver : MonoBehaviour
     {
         bool done = true;
 
-        if(this.currentSkill != null)
+        do
         {
-            done = this.currentSkill.Process();
-        }
+            if(this.currentSkill != null)
+                done = this.currentSkill.Process();
 
-        if(done == true)
-        {
-            this.MoveToNextSkill();
-        }
+            if(done == true)
+                done = this.MoveToNextSkill();
+        } while (done == true);
     }
 
-    private void MoveToNextSkill()  
+    private bool MoveToNextSkill()  
     {
         if(this.skills.Count == 0)
         {
             this.currentSkill = null;
-            return;
+            return false;
         }
 
         KeyValuePair<SkillInput, Skill> skill = this.skills.Dequeue();
         this.currentSkill = skill.Value;
         this.currentInput = skill.Key;
         this.currentSkill.Init(this.currentInput);
+
+        return true;
     }
 }

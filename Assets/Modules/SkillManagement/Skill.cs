@@ -6,12 +6,7 @@ using UnityEngine;
 public class Skill : ScriptableObject
 {
     public string Label;
-    public List<SkillProcessDatas> SkillDatas;
-
-    public Skill(Func<SkillInput, SkillComposite> buildSkillCbk, string skillLabel)
-    {
-
-    }
+    public List<SkillNodeDatas> SkillNodeDatas;
 
     public void Init(SkillInput input)
     {

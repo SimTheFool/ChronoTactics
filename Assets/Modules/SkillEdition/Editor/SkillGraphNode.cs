@@ -11,10 +11,17 @@ public abstract class SkillGraphNode : Node
     protected Guid id;
     public Guid Id => this.id;
 
+    protected NodeType nodeType;
+
     protected Type processType = null;
     
     protected List<Port> ports = new List<Port>();
     public IEnumerable<Port> Ports => this.ports.AsEnumerable();
+
+    public SkillGraphNode(Guid id = default(Guid))
+    {
+        this.id = (id == default(Guid)) ? Guid.NewGuid() : id;
+    }
 
     protected void AddOutputPort(string portName, Type type)
     {
@@ -44,7 +51,7 @@ public abstract class SkillGraphNode : Node
         this.RefreshPorts();
     }
 
-    public abstract SkillProcessDatas GetSkillProcessDatasFromNode();
+    public abstract SkillNodeDatas GetDatasFromNode();
 
-    public abstract IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry);
+    public abstract IEnumerable<Edge> SetNodeFromDatas(SkillNodeDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry);
 }

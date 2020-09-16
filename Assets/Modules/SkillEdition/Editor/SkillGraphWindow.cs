@@ -62,7 +62,7 @@ public class SkillGraphWindow : EditorWindow
         if(this.skillAsset == null)
             return;
 
-        this.skill.SkillDatas = this.graph.GetSkillDatasFromNodes();
+        this.skill.SkillNodeDatas = this.graph.GetSkillDatasFromNodes();
         this.skill.Label = this.nameTextField.value;
 
         string skillAssetPath = AssetDatabase.GetAssetPath(this.skillAsset);
@@ -78,6 +78,6 @@ public class SkillGraphWindow : EditorWindow
         this.skill = skillAsset as Skill;
         this.nameTextField.value = this.skillAsset.name;
 
-        this.graph.SetNodesFromSkillDatas(this.skill.SkillDatas);
+        this.graph.SetNodesFromSkillDatas(this.skill.SkillNodeDatas);
     }
 }

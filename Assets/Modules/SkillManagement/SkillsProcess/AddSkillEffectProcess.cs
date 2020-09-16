@@ -14,12 +14,12 @@ public class AddSkillEffectProcess : SkillProcess
 
     public AddSkillEffectProcess(SkillInput skillInput, Func<SkillInput, SkillComposite> buildSkillCbk, string skillLabel, int effectDuration)
     {
-        Func<SkillInput, SkillComposite> autoEndedBuildSkillCbk = (input) => {
+        /* Func<SkillInput, SkillComposite> autoEndedBuildSkillCbk = (input) => {
             return buildSkillCbk(input).Do((parentProcess) => new EndPassProcess());
         };
         Skill skill = new Skill(autoEndedBuildSkillCbk, skillLabel);
         
-        this.Init(skillInput, skill, effectDuration);
+        this.Init(skillInput, skill, effectDuration); */
     }
 
     private void Init( SkillInput skillInput, Skill skill, int effectDuration)

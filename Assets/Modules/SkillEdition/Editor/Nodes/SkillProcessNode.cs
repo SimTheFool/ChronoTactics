@@ -8,10 +8,10 @@ using UnityEngine;
 
 public class SkillProcessNode : SkillGraphNode
 {
-    public SkillProcessNode(Type compositeType, Guid id = default(Guid)) : base()
+    public SkillProcessNode(Type processType, Guid id = default(Guid)) : base(id)
     {
-        this.processType  = compositeType;
-        this.id = (id == default(Guid)) ? Guid.NewGuid() : id;
+        this.nodeType = NodeType.Process;
+        this.processType  = processType;
 
         this.title = this.processType.ToString();
 
@@ -42,12 +42,13 @@ public class SkillProcessNode : SkillGraphNode
         }
     }
 
-    public override SkillProcessDatas GetSkillProcessDatasFromNode()
+    public override SkillNodeDatas GetDatasFromNode()
     {
-        SkillProcessDatas processDatas = new SkillProcessDatas();
+        SkillNodeDatas processDatas = new SkillNodeDatas();
 
         processDatas.Id = this.id.ToString();
         processDatas.ProcessType = this.processType.ToString();
+        processDatas.NodeType = NodeType.Process;
         Rect rect = this.GetPosition();
         processDatas.Position = new Vector4(rect.x, rect.y, rect.width, rect.height);
 
@@ -72,7 +73,7 @@ public class SkillProcessNode : SkillGraphNode
         return processDatas;
     }
 
-    public override IEnumerable<Edge> SetNodeFromSkillProcessDatas(SkillProcessDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
+    public override IEnumerable<Edge> SetNodeFromDatas(SkillNodeDatas datas, Dictionary<Guid, SkillGraphNode> nodeRegistry)
     {
         List<Edge> edges = new List<Edge>();
 
@@ -94,6 +95,6 @@ public class SkillProcessNode : SkillGraphNode
             edges.Add(inputPort.ConnectTo(outputPort));
         }
 
-        return edges.AsEnumerable();
+        return edges;
     }
 }
